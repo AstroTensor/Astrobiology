@@ -1,39 +1,6 @@
 import numpy as np
 from astrophysics_synthesis import synthesized_astrophysics_analysis
 
-# Define the correct values for comparison -- will be pulled from nn.py
-
-correct_values = {
-    "transformed_value_1": 1.0e-3,
-    "transformed_value_2": 2.0e-3,
-    "transformed_value_3": 3.0e-3,
-    "detected_peaks": 10,
-    "strain_amplitude": 1.0e-21,
-    "total_energy": 1.0e-6,
-    "main_sequence_lifetime": 1.0e10,
-    "white_dwarf_radius": 7000,
-    "neutron_star_radius": 10,
-    "luminosity": 1.0,
-    "supernova_energy": 1.0e44,
-    "final_core_mass": 1.4,
-    "final_envelope_mass": 0.1,
-    "planck_spectrum": 1.0e-18,
-    "cmb_power_spectrum": 1.0e-9,
-    "angular_diameter_distance": 1.0e3,
-    "sound_horizon": 1.0e2,
-    "reionization_history": 0.5,
-    "dark_matter_density_profile": 0.3,
-    "rotation_curve_velocity": 200,
-    "dark_matter_mass_within_radius": 1.0e12,
-    "lensing_deflection_angle": 1.0,
-    "transit_depth": 0.01,
-    "radial_velocity_amplitude": 10,
-    "habitable_zone_inner": 0.95,
-    "habitable_zone_outer": 1.37,
-    "planet_equilibrium_temperature": 288,
-    "transit_duration": 0.5,
-}
-
 # Define weights for each result
 weights = {
     "transformed_value_1": 1.0,
@@ -66,7 +33,7 @@ weights = {
     "transit_duration": 1.5,
 }
 
-def calculate_score(results):
+def calculate_score(inputs, correct_values):
     """
     Calculate the score based on the results and correct values using weighted differences.
     
