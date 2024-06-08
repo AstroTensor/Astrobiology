@@ -108,7 +108,7 @@ async def forward(self):
     # Update the scores based on the rewards
     self.update_scores(rewards, miner_uids)
 
-# TODO
+# TESTS
 # if __name__ == "__main__":
 #     predict_instance = create_predict_class()
 #     score = compute_score(predict_instance)
