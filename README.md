@@ -30,15 +30,66 @@ Predicting the path of asteroids is both a computationally difficult challenge a
 
 ## Mining
 
-Miners are passed a stream of asteroid flight path information from Validators and must return predictions, the coordinates of the moving objects after some time interval. You can see and run the base miner in `neurons/miner.py` although we recommend that miners fill in the blanks to do even better on the subnet.
+Miners are passed a stream of asteroid flight path information from Validators and must return predictions, the coordinates of the moving objects after some time interval. You can see and run the base miner in neurons/miner.py although we recommend that miners fill in the blanks to do even better on the subnet.
+
+The miner utilizes a highly convoluted neural network architecture to solve for the "correct scores" using the asteroid flight path information. The neural network is designed to handle the multi-dimensional, temporal-spatial complexities of the data and provide highly accurate predictions.
+
+Setting Up the Neural Network
+Miners are encouraged to set up their neural networks using a deep learning framework of their choice, such as TensorFlow or PyTorch. The network should be designed to:
+
+Input Handling: Process multi-dimensional time-series data of asteroid coordinates, velocities, accelerations, jerks, and snaps.
+Feature Engineering: Extract high-dimensional features using advanced techniques like convolutional layers, recurrent layers, and attention mechanisms to capture the intricate patterns in the data.
+Temporal Dynamics: Model the temporal dependencies using LSTM or GRU cells, ensuring the network can learn the progression of the asteroid's trajectory over time.
+Optimization Algorithms: Employ sophisticated optimization algorithms such as AdamW, Ranger, or Lookahead to minimize the loss function, which should ideally be a combination of Mean Squared Error and custom loss functions designed to penalize larger deviations.
+Hyperparameter Tuning: Utilize hyperparameter optimization techniques like Bayesian Optimization, Hyperband, or Genetic Algorithms to fine-tune the model parameters for optimal performance.
 
 ---
 
 ## Validating
 
-Validators reward miners based on the Euclidean distance between the predicted location of the asteroid at some later date and the coordinates returned by the miners. The closer the miners are to the predicted coordinates, the better they fare in the reward mechanism and are paid higher. The raw asteroid location data is attained from our endpoint as the ground truth although we plan on opening this up so that any validator can directly access the data at a later date. To run the validator simply call execute `neurons/validator.py`.
+Validators reward miners based on the Euclidean distance between the predicted location of the asteroid at some later date and the coordinates returned by the miners. The closer the miners are to the predicted coordinates, the better they fare in the reward mechanism and are paid higher. The raw asteroid location data is attained from our endpoint as the ground truth although we plan on opening this up so that any validator can directly access the data at a later date.
+
+Holistic Scoring and Reward Mechanism
+The validator employs a multifaceted approach to scoring and rewarding the miners. The process involves the following intricate steps:
+
+Data Acquisition: Raw asteroid location data is continuously fetched from a secure endpoint, ensuring the ground truth data is up-to-date and accurate.
+
+Correct Values Calculation: Using the forward.py module, the validator dynamically computes the "correct values" for the asteroid's future coordinates. This involves leveraging a suite of complex astrophysical equations and constants from utils.equations.py and utils.constants.py.
+
+Prediction Evaluation: The validator assesses the miners' predictions by calculating the Euclidean distance between the predicted coordinates and the correct values. This calculation is performed in a multi-dimensional space, taking into account the intricacies of temporal-spatial data.
+
+Score Calculation: The score is computed using a sophisticated scoring function defined in reward.py. This function applies different weights to each input and uses a series of helper functions to compute the normalized differences. The weighted sum of these differences determines the final score.
+
+Reward Allocation: The validators allocate rewards to miners based on their scores. The reward mechanism is designed to be non-linear, with higher rewards for predictions that are exceptionally close to the correct values. The reward distribution takes into account the overall performance of the miners, ensuring a fair and balanced incentive structure.
 
 ---
+
+
+## File descriptions
+
+directional_equations.py
+Defines essential astrophysical equations and constants fundamental for various calculations in astrophysics.
+
+gravitational_wave_analysis.py
+Provides tools for detecting and analyzing gravitational waves.
+
+stellar_evolution.py
+Focuses on the lifecycle of stars, providing functions to estimate various properties at different evolutionary stages.
+
+cosmic_microwave_background_analysis.py
+Provides tools for analyzing the Cosmic Microwave Background (CMB), a critical aspect of understanding the early universe.
+
+dark_matter_analysis.py
+Focuses on the study and analysis of dark matter, providing functions to calculate density profiles, rotational velocities, mass distributions, and gravitational lensing effects.
+
+exoplanet_detection.py
+Provides tools for detecting and analyzing exoplanets using various astrophysical techniques.
+
+reward.py
+Defines a scoring function that evaluates the accuracy of astrophysical predictions by comparing results against dynamically computed "correct values" and applying different weights.
+
+forward.py
+Integrates values from the Predict class with astrophysical equations from utils.equations and constants from utils.constants. It dynamically computes "correct values" and calculates a final score using the calculate_score function from reward.py.
 
 ## Installation
 
