@@ -117,29 +117,29 @@ The validator uses a comprehensive scoring and reward system involving several d
 
 ## File descriptions
 
-directional_equations.py
-Defines essential astrophysical equations and constants fundamental for various calculations in astrophysics.
+- **`directional_equations.py`**  
+  Defines essential astrophysical equations and constants fundamental for various calculations in astrophysics.
 
-gravitational_wave_analysis.py
-Provides tools for detecting and analyzing gravitational waves.
+- **`gravitational_wave_analysis.py`**  
+  Provides tools for detecting and analyzing gravitational waves.
 
-stellar_evolution.py
-Focuses on the lifecycle of stars, providing functions to estimate various properties at different evolutionary stages.
+- **`stellar_evolution.py`**  
+  Focuses on the lifecycle of stars, providing functions to estimate various properties at different evolutionary stages.
 
-cosmic_microwave_background_analysis.py
-Provides tools for analyzing the Cosmic Microwave Background (CMB), a critical aspect of understanding the early universe.
+- **`cosmic_microwave_background_analysis.py`**  
+  Provides tools for analyzing the Cosmic Microwave Background (CMB), a critical aspect of understanding the early universe.
 
-dark_matter_analysis.py
-Focuses on the study and analysis of dark matter, providing functions to calculate density profiles, rotational velocities, mass distributions, and gravitational lensing effects.
+- **`dark_matter_analysis.py`**  
+  Focuses on the study and analysis of dark matter, providing functions to calculate density profiles, rotational velocities, mass distributions, and gravitational lensing effects.
 
-exoplanet_detection.py
-Provides tools for detecting and analyzing exoplanets using various astrophysical techniques.
+- **`exoplanet_detection.py`**  
+  Provides tools for detecting and analyzing exoplanets using various astrophysical techniques.
 
-reward.py
-Defines a scoring function that evaluates the accuracy of astrophysical predictions by comparing results against dynamically computed "correct values" and applying different weights.
+- **`reward.py`**  
+  Defines a scoring function that evaluates the accuracy of astrophysical predictions by comparing results against dynamically computed "correct values" and applying different weights.
 
-forward.py
-Integrates values from the Predict class with astrophysical equations from utils.equations and constants from utils.constants. It dynamically computes "correct values" and calculates a final score using the calculate_score function from reward.py.
+- **`forward.py`**  
+  Integrates values from the Predict class with astrophysical equations from `utils.equations` and constants from `utils.constants`. It dynamically computes "correct values" and calculates a final score using the `calculate_score` function from `reward.py`.
 
 ## Installation
 
