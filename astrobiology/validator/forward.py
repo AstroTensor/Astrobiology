@@ -1,6 +1,9 @@
 import bittensor as bt
 
 from astrobiology.utils.uids import get_random_uids
+from astrobiology.compute_correct_values import (
+    compute_correct_values,
+)
 from astrobiology.directional_equations import (
     schwarzschild_radius,
     planck_energy,
@@ -224,7 +227,7 @@ async def forward(self):
     # Define how the validator scores responses
     rewards = []
     for response in responses:
-        correct_values = predict_synapse.compute_correct_values()
+        correct_values = compute_correct_values(predict_synapse)
         response_score = calculate_score(correct_values)
         rewards.append(response_score)
 
