@@ -81,8 +81,10 @@ class AsteroidModelPredictor:
 
         # Step 2: Hyperbolic Time Dilation Adjustment (HTDA)
         # This adjustment uses a hyperbolic tangent function to simulate the effects of time dilation at relativistic speeds, modifying the input tensor.
-        time_dilation_matrix = np.tanh(np.outer(padded_input_tensor, np.array([gravitational_time_dilation, lorentz_factor])))
-        adjusted_input = np.dot(padded_input_tensor, time_dilation_matrix)
+        time_dilation_matrix = np.tanh(np.outer(np.ones(padded_input_tensor.shape[1]), np.array([gravitational_time_dilation, lorentz_factor]))).reshape(padded_input_tensor.shape[1], 2)
+        
+        # Adjusted to match the dimensions for matrix multiplication
+        adjusted_input = np.dot(padded_input_tensor, time_dilation_matrix.T)  # Transpose to align dimensions
 
         # Step 3: Lorentzian Manifold Projection (LMP)
         # This projection maps the adjusted input data onto a Lorentzian manifold, which is crucial for modeling trajectories in curved spacetime.
