@@ -1,5 +1,3 @@
-# exoplanet_detection.py
-
 import numpy as np
 from scipy.constants import G, pi, R_sun, M_sun
 from directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
