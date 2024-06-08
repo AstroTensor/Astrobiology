@@ -12,7 +12,7 @@ class AsteroidModelPredictor:
     physical and relativistic parameters to predict the future trajectory of an asteroid.
     """
     
-    def __init__(self):
+    def __init__(self, config):
         """
         Initializes the AsteroidModelPredictor instance by creating the LSTM model.
         """
@@ -73,12 +73,16 @@ class AsteroidModelPredictor:
         # Step 1: Multidimensional Quantum Relativity Transformation (MQRT)
         # This transformation leverages quantum mechanics and general relativity principles to predict asteroid trajectories in n-dimensional space.
         input_tensor = np.array([gravity, velocity_constant, torque, angular_momentum, lorentz_factor, asteroid_mass, gravitational_time_dilation] + [item for sublist in previous_coordinates + predicted_coordinates + previous_velocities + previous_accelerations + previous_jerks for item in sublist])
-        input_tensor = input_tensor.reshape(1, -1, 12)  # Reshape for LSTM (batch_size, timesteps, features)
+        
+        # Ensure the input tensor can be reshaped into the required shape by padding if necessary
+        required_size = ((input_tensor.size // 12) + (1 if input_tensor.size % 12 else 0)) * 12
+        padded_input_tensor = np.pad(input_tensor, (0, required_size - input_tensor.size), 'constant')
+        padded_input_tensor = padded_input_tensor.reshape(1, -1, 12)  # Reshape for LSTM (batch_size, timesteps, features)
 
         # Step 2: Hyperbolic Time Dilation Adjustment (HTDA)
         # This adjustment uses a hyperbolic tangent function to simulate the effects of time dilation at relativistic speeds, modifying the input tensor.
-        time_dilation_matrix = np.tanh(np.outer(input_tensor, np.array([gravitational_time_dilation, lorentz_factor])))
-        adjusted_input = np.dot(input_tensor, time_dilation_matrix)
+        time_dilation_matrix = np.tanh(np.outer(padded_input_tensor, np.array([gravitational_time_dilation, lorentz_factor])))
+        adjusted_input = np.dot(padded_input_tensor, time_dilation_matrix)
 
         # Step 3: Lorentzian Manifold Projection (LMP)
         # This projection maps the adjusted input data onto a Lorentzian manifold, which is crucial for modeling trajectories in curved spacetime.
@@ -97,3 +101,49 @@ class AsteroidModelPredictor:
         # This system uses principles of quantum entanglement to determine the precise position coordinates from the model's output.
         predicted_coordinates = [(float(np.sin(x)), float(np.cos(y)), float(np.tan(z))) for x, y, z in predicted_output[0]]  # Trigonometric transformations for positional accuracy
         return predicted_coordinates
+
+        
+import unittest
+from unittest.mock import MagicMock
+
+class TestAsteroidModelPredictor(unittest.TestCase):
+    def setUp(self):
+        # Create a mock configuration if needed
+        self.config = MagicMock()
+        self.model_predictor = AsteroidModelPredictor(config=self.config)
+
+    def test_predict(self):
+        # Setup test data
+        gravity = 9.81
+        velocity_constant = 1.0
+        torque = 0.5
+        angular_momentum = 0.1
+        lorentz_factor = 1.0001
+        asteroid_mass = 1000
+        gravitational_time_dilation = 0.99
+        previous_coordinates = [(0, 0, 0), (1, 1, 1)]
+        predicted_coordinates = [(2, 2, 2), (3, 3, 3)]
+        previous_velocities = [(0.1, 0.1, 0.1), (0.2, 0.2, 0.2)]
+        previous_accelerations = [(0.01, 0.01, 0.01), (0.02, 0.02, 0.02)]
+        previous_jerks = [(0.001, 0.001, 0.001), (0.002, 0.002, 0.002)]
+
+        # Expected output (mocked)
+        expected_output = [(0.5, 0.5, 0.5), (0.6, 0.6, 0.6)]
+
+        # Mock the model's predict method
+        self.model_predictor.model = MagicMock()
+        self.model_predictor.model.predict.return_value = expected_output
+
+        # Call the predict method
+        result = self.model_predictor.predict_trajectory(
+            gravity, velocity_constant, torque, angular_momentum, lorentz_factor,
+            asteroid_mass, gravitational_time_dilation, previous_coordinates,
+            predicted_coordinates, previous_velocities, previous_accelerations, previous_jerks
+        )
+
+        # Assert the result
+        self.assertEqual(result, expected_output)
+
+if __name__ == '__main__':
+    unittest.main()
+
