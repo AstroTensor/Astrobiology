@@ -65,3 +65,6 @@ class Predict(bt.Synapse):
 
     # List of tuples representing the asteroid's snap (rate of change of jerk) vectors at previous coordinates (sx, sy, sz)
     previous_snaps: List[Tuple[float, float, float]] = None
+
+    # Dynamic markov simulation weights
+    weights: Dict[str, float] = None

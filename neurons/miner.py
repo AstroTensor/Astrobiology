@@ -26,6 +26,8 @@ import astrobiology
 # import base miner class which takes care of most of the boilerplate
 from astrobiology.base.miner import BaseMinerNeuron
 from astrobiology.base.model import AsteroidModelPredictor
+from astrobiology.base.dynamic_markov_simulation import fill_dynamic_arguments_based_on_prediction
+
 class AstroMiner(BaseMinerNeuron):
     """
     This class, AstroMiner, inherits from BaseMinerNeuron and is specifically tailored to predict the future
@@ -111,20 +113,24 @@ class AstroMiner(BaseMinerNeuron):
         # 5. General Relativity Adjustments: Incorporating the effects of gravity as spacetime curvature, which affects the trajectory of the asteroid significantly, especially near massive bodies.
         # 6. Non-linear Dynamics: Dealing with the chaotic nature of asteroid trajectories that result from small changes in initial conditions leading to vastly different outcomes.
         # These steps collectively contribute to the generation of a set of predicted future coordinates, representing the most probable trajectory of the asteroid, given all the current and historical data available to the model.
-        predicted_coordinates = self.model.predict_trajectory(
-            gravity=synapse.gravity,  # Gravitational constant affecting the asteroid.
-            velocity_constant=synapse.velocity_constant,  # Constant velocity of the asteroid in space.
-            torque=synapse.torque,  # Torque affecting the asteroid's rotational motion.
-            angular_momentum=synapse.angular_momentum,  # Angular momentum of the asteroid.
-            lorentz_factor=synapse.lorentz_factor,  # Relativistic factor for velocities approaching the speed of light.
-            asteroid_mass=synapse.asteroid_mass,  # Mass of the asteroid.
-            gravitational_time_dilation=synapse.gravitational_time_dilation,  # Time dilation factor due to gravity.
-            previous_coordinates=synapse.previous_coordinates,  # List of previous coordinates of the asteroid.
-            previous_velocities=synapse.previous_velocities,  # List of previous velocities of the asteroid.
-            previous_accelerations=synapse.previous_accelerations,  # List of previous accelerations.
-            previous_jerks=synapse.previous_jerks  # List of previous jerks (rate of change of acceleration).
-        )
-        synapse.predicted_coordinates = predicted_coordinates  # Update the synapse with the new predicted coordinates.
+        try:
+            predicted_coordinates = self.model.predict_trajectory(
+                gravity=synapse.gravity,  # Gravitational constant affecting the asteroid.
+                velocity_constant=synapse.velocity_constant,  # Constant velocity of the asteroid in space.
+                torque=synapse.torque,  # Torque affecting the asteroid's rotational motion.
+                angular_momentum=synapse.angular_momentum,  # Angular momentum of the asteroid.
+                lorentz_factor=synapse.lorentz_factor,  # Relativistic factor for velocities approaching the speed of light.
+                asteroid_mass=synapse.asteroid_mass,  # Mass of the asteroid.
+                gravitational_time_dilation=synapse.gravitational_time_dilation,  # Time dilation factor due to gravity.
+                previous_coordinates=synapse.previous_coordinates,  # List of previous coordinates of the asteroid.
+                previous_velocities=synapse.previous_velocities,  # List of previous velocities of the asteroid.
+                previous_accelerations=synapse.previous_accelerations,  # List of previous accelerations.
+                previous_jerks=synapse.previous_jerks  # List of previous jerks (rate of change of acceleration).
+            )
+            synapse.predicted_coordinates = predicted_coordinates  # Update the synapse with the new predicted coordinates.
+            synapse = fill_dynamic_arguments_based_on_prediction( predicted_coordinates, synapse ) # Update Markov terms.
+        except:
+            pass
         return synapse  # Return the updated synapse object, now containing the future trajectory predictions.
 
     async def blacklist(
