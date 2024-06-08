@@ -107,7 +107,6 @@ class AsteroidModelPredictor:
         reshaped_time_dilation_matrix = reshaped_time_dilation_matrix.reshape(-1, padded_input_tensor.shape[2])
         adjusted_input = np.matmul(padded_input_tensor, reshaped_time_dilation_matrix.T)  # Transpose needed for correct matrix multiplication
         
-        
         # Step 3: Lorentzian Manifold Projection (LMP)
         # This projection maps the adjusted input data onto a Lorentzian manifold, which is crucial for modeling trajectories in curved spacetime.
         cosh_adjusted_input = np.cosh(adjusted_input)
