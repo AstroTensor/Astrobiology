@@ -1,7 +1,7 @@
 
 
 <div align="center">
-![Alt text](https://github.com/AstroTensor/Astrobiology/raw/main/astrobiology.jpeg)
+![Astrobiology](https://github.com/AstroTensor/Astrobiology/raw/main/astrobiology.jpeg)
   
 # **Astrobiology Subnet** <!-- omit in toc -->
 [![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/bittensor)
