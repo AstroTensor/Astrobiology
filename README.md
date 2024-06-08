@@ -28,6 +28,17 @@
 
 Predicting the path of asteroids is both a computationally difficult challenge and one of incredible importance for safeguarding humanity against stray, interplanetary objects. This subnet uses Bittensor's incentivization system to reward miners for making accurate predictions about the flight paths of asteroids. Because of the complex interaction between multiple moving bodies in space, miners must employ complex prediction methods and artificial intelligence to compute the likely flight paths of the moving objects -- and potentially save humanity.
 
+To read more about the research behind this method see:
+
+Asteroid Impact Predictions
+https://www.researchgate.net/publication/299723990_Asteroid_Impact_Predictions
+
+Identifying Earth-impacting asteroids using an artificial neural network
+https://www.aanda.org/articles/aa/full_html/2020/02/aa35983-19/aa35983-19.html
+
+A probabilistic asteroid impact risk model: assessment of sub-300 m impacts
+https://www.sciencedirect.com/science/article/pii/S0019103516307126
+
 ---
 
 ## Mining
