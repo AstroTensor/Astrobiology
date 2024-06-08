@@ -120,7 +120,6 @@ class AstroMiner(BaseMinerNeuron):
             asteroid_mass=synapse.asteroid_mass,  # Mass of the asteroid.
             gravitational_time_dilation=synapse.gravitational_time_dilation,  # Time dilation factor due to gravity.
             previous_coordinates=synapse.previous_coordinates,  # List of previous coordinates of the asteroid.
-            predicted_coordinates=synapse.predicted_coordinates,  # Initial prediction of future coordinates.
             previous_velocities=synapse.previous_velocities,  # List of previous velocities of the asteroid.
             previous_accelerations=synapse.previous_accelerations,  # List of previous accelerations.
             previous_jerks=synapse.previous_jerks  # List of previous jerks (rate of change of acceleration).
