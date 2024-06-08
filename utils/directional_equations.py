@@ -327,3 +327,12 @@ def flux_density(luminosity, distance):
     S = L / (4 * pi * d^2)
     """
     return luminosity / (4 * 3.14159 * distance**2)
+
+def schwarzschild_radius(mass):
+    return 2 * G * mass / C**2
+
+def planck_energy(frequency):
+    return H * frequency
+
+def hawking_temperature(mass):
+    return (HBAR * C**3) / (8 * 3.14159 * G * mass * KB)
