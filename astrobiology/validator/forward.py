@@ -1,28 +1,62 @@
-# The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
-# TODO(developer): Set your name
-# Copyright © 2023 <your name>
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-# documentation files (the “Software”), to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-# and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in all copies or substantial portions of
-# the Software.
-
-# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-# THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-# DEALINGS IN THE SOFTWARE.
-
 import bittensor as bt
 
-from astrobiology.protocol import Predict
-from astrobiology.validator.reward import get_rewards
-from astrobiology.utils.uids import get_random_uids
+from predict import Predict
+from reward import calculate_score
+from utils.uids import get_random_uids
+from utils.equations import (
+    schwarzschild_radius,
+    planck_energy,
+    hawking_temperature,
+    gravitational_force,
+    lorentz_factor,
+    torque_equation,
+    angular_momentum_equation,
+    gravitational_time_dilation,
+    random_equation_1,
+    random_equation_2,
+)
+from utils.constants import G, c, M_sun
 
+def create_predict_class():
+    """
+    Create the Predict class dynamically using equations from equations.py
+    """
+
+    # Example parameters calculated using equations from equations.py
+    mass = 1e12  # Example mass of the asteroid in kg
+    velocity = 30000  # Example constant velocity in m/s
+    radius = 1e5  # Example radius in meters
+
+    gravity = gravitational_force(mass, radius)
+    velocity_constant = velocity
+    torque = torque_equation(mass, radius)
+    angular_momentum = angular_momentum_equation(mass, velocity, radius)
+    lorentz = lorentz_factor(velocity)
+    time_dilation = gravitational_time_dilation(mass, radius)
+
+    # Generate dummy previous state data (you can replace it with real data)
+    previous_coordinates = [(0, 0, 0), (radius, radius, radius)]
+    previous_velocities = [(0, 0, 0), (velocity, velocity, velocity)]
+    previous_accelerations = [(0, 0, 0), (random_equation_1(mass, radius), random_equation_1(mass, radius), random_equation_1(mass, radius))]
+    previous_jerks = [(0, 0, 0), (random_equation_2(mass, velocity), random_equation_2(mass, velocity), random_equation_2(mass, velocity))]
+    previous_snaps = [(0, 0, 0), (random_equation_1(velocity, radius), random_equation_1(velocity, radius), random_equation_1(velocity, radius))]
+
+    predict_instance = Predict(
+        gravity=gravity,
+        velocity_constant=velocity_constant,
+        torque=torque,
+        angular_momentum=angular_momentum,
+        lorentz_factor=lorentz,
+        asteroid_mass=mass,
+        gravitational_time_dilation=time_dilation,
+        previous_coordinates=previous_coordinates,
+        previous_velocities=previous_velocities,
+        previous_accelerations=previous_accelerations,
+        previous_jerks=previous_jerks,
+        previous_snaps=previous_snaps
+    )
+
+    return predict_instance
 
 async def forward(self):
     """
@@ -34,28 +68,36 @@ async def forward(self):
         self (:obj:`bittensor.neuron.Neuron`): The neuron object which contains all the necessary state for the validator.
 
     """
-    # TODO(developer): Define how the validator selects a miner to query, how often, etc.
-    # get_random_uids is an example method, but you can replace it with your own.
+    # Select miners to query
     miner_uids = get_random_uids(self, k=self.config.neuron.sample_size)
 
-    # The dendrite client queries the network.
+    # Create the Predict instance using the dynamically created parameters
+    predict_synapse = create_predict_class()
+
+    # Query the network
     responses = await self.dendrite(
-        # Send the query to selected miner axons in the network.
         axons=[self.metagraph.axons[uid] for uid in miner_uids],
-        # Construct a dummy query. This simply contains a single integer.
-        synapse=Predict(dummy_input=self.step),
-        # All responses have the deserialize function called on them before returning.
-        # You are encouraged to define your own deserialization function.
+        synapse=predict_synapse,
         deserialize=True,
     )
 
-    # Log the results for monitoring purposes.
+    # Log the results for monitoring purposes
     bt.logging.info(f"Received responses: {responses}")
 
-    # TODO(developer): Define how the validator scores responses.
-    # Adjust the scores based on responses from miners.
-    rewards = get_rewards(self, query=self.step, responses=responses)
+    # Define how the validator scores responses
+    rewards = []
+    for response in responses:
+        correct_values = predict_synapse.compute_correct_values()
+        response_score = calculate_score(correct_values)
+        rewards.append(response_score)
 
     bt.logging.info(f"Scored responses: {rewards}")
-    # Update the scores based on the rewards. You may want to define your own update_scores function for custom behavior.
+
+    # Update the scores based on the rewards
     self.update_scores(rewards, miner_uids)
+
+# TESTS
+# if __name__ == "__main__":
+#     predict_instance = create_predict_class()
+#     score = compute_score(predict_instance)
+#     print("Computed Score:", score)
