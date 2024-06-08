@@ -19,6 +19,9 @@
   - [Before you proceed](#before-you-proceed)
   - [Install](#install)
 - [License](#license)
+- [File Descriptions](#file-descriptions)
+- [Neural Network Architecture](#neural-network-architecture)
+- [Holistic Scoring and Reward Mechanism](#holistic-scoring-and-reward-mechanism)
 
 ---
 
