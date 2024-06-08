@@ -1,27 +1,36 @@
 import bittensor as bt
 
-from predict import Predict
-from reward import calculate_score
 from astrobiology.utils.uids import get_random_uids
-from utils.equations import (
+from astrobiology.compute_correct_values import (
+    compute_correct_values,
+)
+from astrobiology.directional_equations import (
     schwarzschild_radius,
     planck_energy,
     hawking_temperature,
-    gravitational_force,
     lorentz_factor,
     torque_equation,
     angular_momentum_equation,
     gravitational_time_dilation,
-    random_equation_1,
-    random_equation_2,
+    escape_velocity,
+    specific_angular_momentum,
+    gravitational_wave_strain,
+    flux_density,
+    kepler_third_law,
+    blackbody_spectrum,
+    random_mass,
+    random_velocity,
+    random_radius,
+    random_distance,
+    random_frequency,
+    random_chirp_mass,
 )
-from utils.constants import G, c, M_sun
+from astrobiology.constants import G, c, M_sun
 import numpy as np
 from typing import List, Tuple
-from utils.equations import schwarzschild_radius, planck_energy, hawking_temperature, some_other_complex_equation
 from utils.constants import G, M_sun, c
-from reward import calculate_score
-from protocol import Predict
+from astrobiology.reward import calculate_score
+from astrobiology.protocol import Predict
 
 def compute_transformed_value_1(predict: Predict) -> float:
     return schwarzschild_radius(predict.asteroid_mass)
@@ -111,25 +120,66 @@ def create_predict_class():
     """
     Create the Predict class dynamically using equations from equations.py
     """
+    def generate_mass():
+        """
+        Generate a mass value for an asteroid (in kg) within a plausible range.
+        """
+        return np.random.uniform(1e10, 1e14) 
 
-    # Example parameters calculated using equations from equations.py
-    mass = 1e12  # Example mass of the asteroid in kg
-    velocity = 30000  # Example constant velocity in m/s
-    radius = 1e5  # Example radius in meters
+    def generate_velocity():
+        """
+        Generate a velocity value for an asteroid (in m/s) within a plausible range.
+        """
+        return np.random.uniform(1e3, 1e5) 
 
-    gravity = gravitational_force(mass, radius)
+    def generate_radius():
+        """
+        Generate a radius value for an asteroid (in meters) within a plausible range.
+        """
+        return np.random.uniform(1e3, 1e6) 
+
+    def generate_distance():
+        """
+        Generate a distance value for an asteroid (in meters) within a plausible range.
+        """
+        return np.random.uniform(1e7, 1e9) 
+
+    def generate_frequency():
+        """
+        Generate a frequency value for radiation (in Hz) within a plausible range.
+        """
+        return np.random.uniform(1e12, 1e16) 
+
+    def generate_chirp_mass():
+        """
+        Generate a chirp mass value for a binary system (in kg) within a plausible range.
+        """
+        return np.random.uniform(1e9, 1e11) 
+
+    mass = generate_mass()
+    velocity = generate_velocity()
+    radius = generate_radius()
+    distance = generate_distance()
+    frequency = generate_frequency()
+    chirp_mass = generate_chirp_mass()
+
+    gravity = G * mass / radius**2
     velocity_constant = velocity
     torque = torque_equation(mass, radius)
     angular_momentum = angular_momentum_equation(mass, velocity, radius)
     lorentz = lorentz_factor(velocity)
     time_dilation = gravitational_time_dilation(mass, radius)
-
-    # Generate dummy previous state data (you can replace it with real data)
+    escape_vel = escape_velocity(mass, radius)
+    specific_ang_mom = specific_angular_momentum(radius, velocity)
+    grav_wave_strain = gravitational_wave_strain(distance, chirp_mass)
+    flux = flux_density(planck_energy(frequency), distance)
+    kepler_mass = kepler_third_law(radius, escape_vel)
+    blackbody_flux = blackbody_spectrum(frequency, mass)
     previous_coordinates = [(0, 0, 0), (radius, radius, radius)]
     previous_velocities = [(0, 0, 0), (velocity, velocity, velocity)]
-    previous_accelerations = [(0, 0, 0), (random_equation_1(mass, radius), random_equation_1(mass, radius), random_equation_1(mass, radius))]
-    previous_jerks = [(0, 0, 0), (random_equation_2(mass, velocity), random_equation_2(mass, velocity), random_equation_2(mass, velocity))]
-    previous_snaps = [(0, 0, 0), (random_equation_1(velocity, radius), random_equation_1(velocity, radius), random_equation_1(velocity, radius))]
+    previous_accelerations = [(0, 0, 0), (gravity, gravity, gravity)]
+    previous_jerks = [(0, 0, 0), (torque, torque, torque)]
+    previous_snaps = [(0, 0, 0), (lorentz, lorentz, lorentz)]
 
     predict_instance = Predict(
         gravity=gravity,
@@ -177,7 +227,7 @@ async def forward(self):
     # Define how the validator scores responses
     rewards = []
     for response in responses:
-        correct_values = predict_synapse.compute_correct_values()
+        correct_values = compute_correct_values(predict_synapse)
         response_score = calculate_score(correct_values)
         rewards.append(response_score)
 
