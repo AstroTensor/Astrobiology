@@ -60,10 +60,44 @@ Validators assess and reward miners based on the accuracy of their predictions. 
 The validator uses a comprehensive scoring and reward system involving several detailed steps:
 
 - **Data Acquisition:** Continuously fetch raw asteroid location data from a secure endpoint to ensure the ground truth data is accurate and up-to-date.
+
+  ```latex
+  \begin{equation}
+  \text{Data}_{\text{raw}} = \int_{t_0}^{t_n} \text{fetch}(\text{endpoint})
+  \end{equation}
+  ```
+
 - **Correct Values Calculation:** Dynamically compute the "correct values" for the asteroid's future coordinates using the `forward.py` module, which leverages complex astrophysical equations and constants from `utils.equations.py` and `utils.constants.py`.
+
+  ```latex
+  \begin{equation}
+  \text{Correct}_{\text{values}} = f(\text{astrophysical\_equations}, \text{constants})
+  \end{equation}
+  ```
+
 - **Prediction Evaluation:** Calculate the Euclidean distance between the predicted coordinates and the correct values in a multi-dimensional space, considering the temporal-spatial intricacies of the data.
+
+  ```latex
+  \begin{equation}
+  \text{Distance} = \sqrt{\sum_{i=1}^{n} (x_i - y_i)^2}
+  \end{equation}
+  ```
+
 - **Score Calculation:** Use a sophisticated scoring function defined in `reward.py`, applying different weights to each input and utilizing a series of helper functions to compute the normalized differences. The weighted sum of these differences determines the final score.
+
+  ```latex
+  \begin{equation}
+  \text{Score} = \sum_{i=1}^{n} w_i \cdot \left( \frac{x_i - y_i}{\text{max}(x_i, y_i)} \right)
+  \end{equation}
+  ```
+
 - **Reward Allocation:** Distribute rewards to miners based on their scores using a non-linear reward mechanism, which offers higher rewards for exceptionally close predictions. This distribution considers the overall performance of the miners to ensure a fair and balanced incentive structure.
+
+  ```latex
+  \begin{equation}
+  \text{Reward} = \frac{1}{1 + e^{-\text{Score}}}
+  \end{equation}
+  ```
 
 ---
 
@@ -107,11 +141,6 @@ Before you proceed with the installation of the subnet, note the following:
 - Note that installation instructions differ based on your situation: For example, installing for local development and testing will require a few additional steps compared to installing for testnet. Similarly, installation instructions differ for a subnet owner vs a validator or a miner.
 
 ### Install
-
-```bash
-python3.11 -m pip install -e .
-```
-
 
 ---
 
