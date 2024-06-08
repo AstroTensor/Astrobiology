@@ -46,7 +46,7 @@ https://www.sciencedirect.com/science/article/pii/S0019103516307126
 
 ### Why this subnet makes sense for Bittensor
 
-The job to predict astrological movements is incredibly difficult and incredibly lucrative, in 2020 Nasa allocated $1.104 billion in total funding to do astrological and specifically asteroid based predictive modelling.  Only the a few handful of major institutions are capable of moving the needly on predictive accuracy. For instance, the Near Earth project at Meta and from various governmental organizations like **LINEAR** (Lincoln Near-Earth Asteroid Research). We think Bittensor can do better and importantly **sell** that knowledge to the USA and other govs worldwide. 【6†source】【7†source】. 
+The job to predict astrological movements is incredibly difficult and incredibly lucrative, in 2020 Nasa allocated $1.104 billion in total funding to do astrological and specifically asteroid based predictive modelling.  Only the a few handful of major institutions are capable of moving the needly on predictive accuracy. For instance, the Near Earth Object Project Group and from various governmental organizations like **LINEAR** (Lincoln Near-Earth Asteroid Research). We think Bittensor can do better and importantly **sell** that knowledge to the USA and other govs worldwide. 【6†source】【7†source】. 
 
 - [MIT Institutional Research](https://ir.mit.edu/research-expenditures)
 - [MIT Lincoln Laboratory](https://facts.mit.edu)
