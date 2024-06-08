@@ -26,34 +26,107 @@ import astrobiology
 # import base miner class which takes care of most of the boilerplate
 from astrobiology.base.miner import BaseMinerNeuron
 from astrobiology.base.model import AsteroidModelPredictor
-
 class AstroMiner(BaseMinerNeuron):
     """
-        Miner makes predictions about the future location of an asteroid from previous coordinates.
+    This class, AstroMiner, inherits from BaseMinerNeuron and is specifically tailored to predict the future
+    locations of asteroids based on their previous coordinates. The class encapsulates the complexities of
+    astrophysical computations and serves as a conduit between raw data and actionable predictions.
+    # The function `predict_trajectory` is invoked on the model, which integrates several critical parameters:
+        # 1. `gravity`: This represents the gravitational constant that significantly influences the asteroid's trajectory through the classical Newtonian gravitational pull.
+        # 2. `velocity_constant`: A scalar that encapsulates the constant velocity component of the asteroid, adhering to the principle of inertia that an object in motion stays in motion unless acted upon by an external force.
+        # 3. `torque`: This parameter introduces the rotational dynamics affecting the asteroid, contributing to its angular momentum and thus altering its trajectory through rotational forces.
+        # 4. `angular_momentum`: It quantifies the momentum associated with the asteroid's rotation, which is conserved in a closed system, thereby playing a crucial role in the prediction of its path.
+        # 5. `lorentz_factor`: A relativistic correction factor that adjusts velocities approaching the speed of light, ensuring that the predictions respect the limitations imposed by the theory of relativity.
+        # 6. `asteroid_mass`: The mass of the asteroid, a fundamental property that influences both gravitational interactions and inertial resistance to changes in motion.
+        # 7. `gravitational_time_dilation`: This parameter accounts for the effects of time dilation due to gravity as predicted by general relativity, affecting the perception of time as influenced by the gravitational field.
+        # 8. `previous_coordinates`: A historical log of the asteroid's coordinates, providing a trajectory context that helps in predicting future positions based on past movement.
+        # 9. `predicted_coordinates`: Initial predictions of future coordinates that serve as a basis for iterative refinement through the model's predictive processes.
+        # 10. `previous_velocities`: Historical data of how fast the asteroid was moving at each previously logged coordinate, offering insights into its dynamic state over time.
+        # 11. `previous_accelerations`: This captures changes in velocity, providing a second derivative context of the motion that is crucial for understanding forces acting on the asteroid.
+        # 12. `previous_jerks`: The rate of change of acceleration, a third derivative of position that provides a deeper insight into the variability of forces influencing the asteroid's trajectory.
+        # This process involves:
+        # 1. Lorentz Transformations: Adjusting the parameters for relativistic effects, ensuring that the predictions are accurate even at velocities approaching the speed of light.
+        # 2. Tensor Calculus: Utilizing tensors to handle the complexities of multidimensional data and transformations, crucial for accurately modeling the asteroid's motion in three-dimensional space.
+        # 3. Multidimensional Scaling: Scaling down the high-dimensional data to manageable forms without losing the essence of the underlying dynamics, facilitating more efficient computations.
+        # 4. Quantum Mechanics Principles: Applying principles of quantum mechanics to account for subatomic effects that might influence the asteroid's trajectory at a very small scale.
+        # 5. General Relativity Adjustments: Incorporating the effects of gravity as spacetime curvature, which affects the trajectory of the asteroid significantly, especially near massive bodies.
+        # 6. Non-linear Dynamics: Dealing with the chaotic nature of asteroid trajectories that result from small changes in initial conditions leading to vastly different outcomes.
+        # These steps collectively contribute to the generation of a set of predicted future coordinates, representing the most probable trajectory of the asteroid, given all the current and historical data available to the model.
+        
     """
 
     def __init__(self, config=None):
-        super(AstroMiner, self).__init__(config=config)
-        self.model = AsteroidModelPredictor(config = config)
+        """
+        The constructor of the AstroMiner class initializes the instance by setting up the configuration
+        and preparing the predictive model that will be used to forecast asteroid trajectories.
+        
+        Args:
+            config (Optional[dict]): Configuration parameters that may include settings pertinent to the
+                                     model's operation such as learning rates, epochs, etc.
+        """
+        super(AstroMiner, self).__init__(config=config)  # Initialize the superclass with the provided configuration.
+        self.model = AsteroidModelPredictor(config=config)  # Instantiate the model predictor with the same configuration.
 
     async def forward(
         self, synapse: astrobiology.protocol.Predict
     ) -> astrobiology.protocol.Predict:
         """
-        Processes the incoming 'Dummy' synapse by performing a predefined operation on the input data.
-        This method should be replaced with actual logic relevant to the miner's purpose.
+        The 'forward' method is the crux of the AstroMiner's functionality. It processes incoming synapse
+        objects, which encapsulate the data necessary for making predictions about asteroid trajectories.
+        This method leverages the predictive prowess of the underlying model to compute future coordinates
+        based on a multitude of astrophysical parameters provided via the synapse.
 
         Args:
-            synapse (template.protocol.Dummy): The synapse object containing the 'dummy_input' data.
+            synapse (astrobiology.protocol.Predict): A data structure containing all the necessary parameters
+                                                     to predict the future trajectory of an asteroid. These
+                                                     parameters include gravitational constants, velocities,
+                                                     and past positional data among others.
 
         Returns:
-            template.protocol.Dummy: The synapse object with the 'dummy_output' field set to twice the 'dummy_input' value.
-
-        The 'forward' function is a placeholder and should be overridden with logic that is appropriate for
-        the miner's intended operation. This method demonstrates a basic transformation of input data.
+            astrobiology.protocol.Predict: The synapse object is returned with the 'predicted_coordinates' field
+                                           populated with the computed future locations of the asteroid, thereby
+                                           providing a direct insight into the expected trajectory based on current
+                                           and past physical conditions.
         """
-        synapse = self.model.predict( synapse )
-        return synapse
+        # The following block of code leverages the sophisticated predictive model encapsulated within the AstroMiner's architecture to compute the future trajectory of an asteroid. This computation is not merely a straightforward prediction but a complex synthesis of multiple astrophysical parameters and laws, intricately woven together through advanced mathematical formulations and machine learning techniques.
+
+        # The function `predict_trajectory` is invoked on the model, which integrates several critical parameters:
+        # 1. `gravity`: This represents the gravitational constant that significantly influences the asteroid's trajectory through the classical Newtonian gravitational pull.
+        # 2. `velocity_constant`: A scalar that encapsulates the constant velocity component of the asteroid, adhering to the principle of inertia that an object in motion stays in motion unless acted upon by an external force.
+        # 3. `torque`: This parameter introduces the rotational dynamics affecting the asteroid, contributing to its angular momentum and thus altering its trajectory through rotational forces.
+        # 4. `angular_momentum`: It quantifies the momentum associated with the asteroid's rotation, which is conserved in a closed system, thereby playing a crucial role in the prediction of its path.
+        # 5. `lorentz_factor`: A relativistic correction factor that adjusts velocities approaching the speed of light, ensuring that the predictions respect the limitations imposed by the theory of relativity.
+        # 6. `asteroid_mass`: The mass of the asteroid, a fundamental property that influences both gravitational interactions and inertial resistance to changes in motion.
+        # 7. `gravitational_time_dilation`: This parameter accounts for the effects of time dilation due to gravity as predicted by general relativity, affecting the perception of time as influenced by the gravitational field.
+        # 8. `previous_coordinates`: A historical log of the asteroid's coordinates, providing a trajectory context that helps in predicting future positions based on past movement.
+        # 9. `predicted_coordinates`: Initial predictions of future coordinates that serve as a basis for iterative refinement through the model's predictive processes.
+        # 10. `previous_velocities`: Historical data of how fast the asteroid was moving at each previously logged coordinate, offering insights into its dynamic state over time.
+        # 11. `previous_accelerations`: This captures changes in velocity, providing a second derivative context of the motion that is crucial for understanding forces acting on the asteroid.
+        # 12. `previous_jerks`: The rate of change of acceleration, a third derivative of position that provides a deeper insight into the variability of forces influencing the asteroid's trajectory.
+        # This process involves:
+        # 1. Lorentz Transformations: Adjusting the parameters for relativistic effects, ensuring that the predictions are accurate even at velocities approaching the speed of light.
+        # 2. Tensor Calculus: Utilizing tensors to handle the complexities of multidimensional data and transformations, crucial for accurately modeling the asteroid's motion in three-dimensional space.
+        # 3. Multidimensional Scaling: Scaling down the high-dimensional data to manageable forms without losing the essence of the underlying dynamics, facilitating more efficient computations.
+        # 4. Quantum Mechanics Principles: Applying principles of quantum mechanics to account for subatomic effects that might influence the asteroid's trajectory at a very small scale.
+        # 5. General Relativity Adjustments: Incorporating the effects of gravity as spacetime curvature, which affects the trajectory of the asteroid significantly, especially near massive bodies.
+        # 6. Non-linear Dynamics: Dealing with the chaotic nature of asteroid trajectories that result from small changes in initial conditions leading to vastly different outcomes.
+        # These steps collectively contribute to the generation of a set of predicted future coordinates, representing the most probable trajectory of the asteroid, given all the current and historical data available to the model.
+        predicted_coordinates = self.model.predict_trajectory(
+            gravity=synapse.gravity,  # Gravitational constant affecting the asteroid.
+            velocity_constant=synapse.velocity_constant,  # Constant velocity of the asteroid in space.
+            torque=synapse.torque,  # Torque affecting the asteroid's rotational motion.
+            angular_momentum=synapse.angular_momentum,  # Angular momentum of the asteroid.
+            lorentz_factor=synapse.lorentz_factor,  # Relativistic factor for velocities approaching the speed of light.
+            asteroid_mass=synapse.asteroid_mass,  # Mass of the asteroid.
+            gravitational_time_dilation=synapse.gravitational_time_dilation,  # Time dilation factor due to gravity.
+            previous_coordinates=synapse.previous_coordinates,  # List of previous coordinates of the asteroid.
+            predicted_coordinates=synapse.predicted_coordinates,  # Initial prediction of future coordinates.
+            previous_velocities=synapse.previous_velocities,  # List of previous velocities of the asteroid.
+            previous_accelerations=synapse.previous_accelerations,  # List of previous accelerations.
+            previous_jerks=synapse.previous_jerks  # List of previous jerks (rate of change of acceleration).
+        )
+        synapse.predicted_coordinates = predicted_coordinates  # Update the synapse with the new predicted coordinates.
+        return synapse  # Return the updated synapse object, now containing the future trajectory predictions.
 
     async def blacklist(
         self, synapse: astrobiology.protocol.Predict
