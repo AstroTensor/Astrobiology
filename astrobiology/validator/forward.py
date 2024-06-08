@@ -19,9 +19,9 @@
 
 import bittensor as bt
 
-from template.protocol import Dummy
-from template.validator.reward import get_rewards
-from template.utils.uids import get_random_uids
+from astrobiology.protocol import Dummy
+from astrobiology.validator.reward import get_rewards
+from astrobiology.utils.uids import get_random_uids
 
 
 async def forward(self):
