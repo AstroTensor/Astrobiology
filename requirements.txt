@@ -1,1 +1,4 @@
 bittensor
+numpy
+tensorflow
+astropy
