@@ -2,7 +2,6 @@
   <img src="https://github.com/AstroTensor/Astrobiology/raw/main/astrobiology.jpeg" alt="Astrobiology" width="600">
   
   # **Astrobiology Subnet**
-  [![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/bittensor)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
   ---
