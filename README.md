@@ -30,37 +30,37 @@ Predicting the path of asteroids is both a computationally difficult challenge a
 
 ## Mining
 
-Miners are passed a stream of asteroid flight path information from Validators and must return predictions, the coordinates of the moving objects after some time interval. You can see and run the base miner in neurons/miner.py although we recommend that miners fill in the blanks to do even better on the subnet.
+Miners receive a stream of asteroid flight path data from Validators and are tasked with returning predictions, specifically the coordinates of the moving objects after a certain time interval. The base miner implementation can be found in `neurons/miner.py`, but miners are encouraged to enhance this to improve performance on the subnet.
 
-The miner utilizes a highly convoluted neural network architecture to solve for the "correct scores" using the asteroid flight path information. The neural network is designed to handle the multi-dimensional, temporal-spatial complexities of the data and provide highly accurate predictions.
+### Neural Network Architecture
 
-Setting Up the Neural Network
-Miners are encouraged to set up their neural networks using a deep learning framework of their choice, such as TensorFlow or PyTorch. The network should be designed to:
+The mining process utilizes a sophisticated neural network architecture designed to compute "correct scores" based on the asteroid flight path data. This network is tailored to manage the multi-dimensional, temporal-spatial complexities of the data to deliver highly accurate predictions.
 
-Input Handling: Process multi-dimensional time-series data of asteroid coordinates, velocities, accelerations, jerks, and snaps.
-Feature Engineering: Extract high-dimensional features using advanced techniques like convolutional layers, recurrent layers, and attention mechanisms to capture the intricate patterns in the data.
-Temporal Dynamics: Model the temporal dependencies using LSTM or GRU cells, ensuring the network can learn the progression of the asteroid's trajectory over time.
-Optimization Algorithms: Employ sophisticated optimization algorithms such as AdamW, Ranger, or Lookahead to minimize the loss function, which should ideally be a combination of Mean Squared Error and custom loss functions designed to penalize larger deviations.
-Hyperparameter Tuning: Utilize hyperparameter optimization techniques like Bayesian Optimization, Hyperband, or Genetic Algorithms to fine-tune the model parameters for optimal performance.
+#### Setting Up the Neural Network
+
+Miners should set up their neural networks using a deep learning framework like TensorFlow or PyTorch. The network configuration should include:
+
+- **Input Handling:** Process multi-dimensional time-series data including asteroid coordinates, velocities, accelerations, jerks, and snaps.
+- **Feature Engineering:** Implement advanced techniques such as convolutional layers, recurrent layers, and attention mechanisms to extract high-dimensional features and capture complex patterns in the data.
+- **Temporal Dynamics:** Incorporate LSTM or GRU cells to model the temporal dependencies, enabling the network to learn the progression of the asteroid's trajectory over time.
+- **Optimization Algorithms:** Use advanced optimization algorithms like AdamW, Ranger, or Lookahead to minimize the loss function, which should ideally combine Mean Squared Error with custom loss functions that penalize larger deviations.
+- **Hyperparameter Tuning:** Apply techniques such as Bayesian Optimization, Hyperband, or Genetic Algorithms to fine-tune the model parameters for optimal performance.
 
 ---
 
 ## Validating
 
-Validators reward miners based on the Euclidean distance between the predicted location of the asteroid at some later date and the coordinates returned by the miners. The closer the miners are to the predicted coordinates, the better they fare in the reward mechanism and are paid higher. The raw asteroid location data is attained from our endpoint as the ground truth although we plan on opening this up so that any validator can directly access the data at a later date.
+Validators assess and reward miners based on the accuracy of their predictions. The Euclidean distance between the predicted and actual coordinates of the asteroid at a later date determines the reward; closer predictions yield higher rewards. The raw asteroid location data is sourced from our endpoint as the ground truth, with plans to make this data directly accessible to validators in the future.
 
-Holistic Scoring and Reward Mechanism
-The validator employs a multifaceted approach to scoring and rewarding the miners. The process involves the following intricate steps:
+### Holistic Scoring and Reward Mechanism
 
-Data Acquisition: Raw asteroid location data is continuously fetched from a secure endpoint, ensuring the ground truth data is up-to-date and accurate.
+The validator uses a comprehensive scoring and reward system involving several detailed steps:
 
-Correct Values Calculation: Using the forward.py module, the validator dynamically computes the "correct values" for the asteroid's future coordinates. This involves leveraging a suite of complex astrophysical equations and constants from utils.equations.py and utils.constants.py.
-
-Prediction Evaluation: The validator assesses the miners' predictions by calculating the Euclidean distance between the predicted coordinates and the correct values. This calculation is performed in a multi-dimensional space, taking into account the intricacies of temporal-spatial data.
-
-Score Calculation: The score is computed using a sophisticated scoring function defined in reward.py. This function applies different weights to each input and uses a series of helper functions to compute the normalized differences. The weighted sum of these differences determines the final score.
-
-Reward Allocation: The validators allocate rewards to miners based on their scores. The reward mechanism is designed to be non-linear, with higher rewards for predictions that are exceptionally close to the correct values. The reward distribution takes into account the overall performance of the miners, ensuring a fair and balanced incentive structure.
+- **Data Acquisition:** Continuously fetch raw asteroid location data from a secure endpoint to ensure the ground truth data is accurate and up-to-date.
+- **Correct Values Calculation:** Dynamically compute the "correct values" for the asteroid's future coordinates using the `forward.py` module, which leverages complex astrophysical equations and constants from `utils.equations.py` and `utils.constants.py`.
+- **Prediction Evaluation:** Calculate the Euclidean distance between the predicted coordinates and the correct values in a multi-dimensional space, considering the temporal-spatial intricacies of the data.
+- **Score Calculation:** Use a sophisticated scoring function defined in `reward.py`, applying different weights to each input and utilizing a series of helper functions to compute the normalized differences. The weighted sum of these differences determines the final score.
+- **Reward Allocation:** Distribute rewards to miners based on their scores using a non-linear reward mechanism, which offers higher rewards for exceptionally close predictions. This distribution considers the overall performance of the miners to ensure a fair and balanced incentive structure.
 
 ---
 
