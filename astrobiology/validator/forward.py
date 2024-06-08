@@ -19,7 +19,7 @@
 
 import bittensor as bt
 
-from astrobiology.protocol import Dummy
+from astrobiology.protocol import Predict
 from astrobiology.validator.reward import get_rewards
 from astrobiology.utils.uids import get_random_uids
 

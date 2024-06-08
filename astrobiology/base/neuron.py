@@ -23,10 +23,10 @@ import bittensor as bt
 from abc import ABC, abstractmethod
 
 # Sync calls set weights and also resyncs the metagraph.
-from template.utils.config import check_config, add_args, config
-from template.utils.misc import ttl_get_block
-from template import __spec_version__ as spec_version
-from template.mock import MockSubtensor, MockMetagraph
+from astrobiology.utils.config import check_config, add_args, config
+from astrobiology.utils.misc import ttl_get_block
+from astrobiology import __spec_version__ as spec_version
+from astrobiology.mock import MockSubtensor, MockMetagraph
 
 
 class BaseNeuron(ABC):
@@ -64,9 +64,6 @@ class BaseNeuron(ABC):
         self.config = self.config()
         self.config.merge(base_config)
         self.check_config(self.config)
-
-        # Set up logging with the provided configuration.
-        bt.logging.set_config(config=self.config.logging)
 
         # If a gpu is required, set the device to cuda:N (e.g. cuda:0)
         self.device = self.config.neuron.device
