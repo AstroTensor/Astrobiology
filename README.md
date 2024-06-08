@@ -30,13 +30,13 @@ Predicting the path of asteroids is both a computationally difficult challenge a
 
 To read more about the research behind this method see:
 
-Asteroid Impact Predictions
-https://www.researchgate.net/publication/299723990_Asteroid_Impact_Predictions: \n
+- ***Asteroid Impact Predictions***
+https://www.researchgate.net/publication/299723990_Asteroid_Impact_Predictions***
 
-Identifying Earth-impacting asteroids using an artificial neural network:\n
+- ***Identifying Earth-impacting asteroids using an artificial neural network***
 https://www.aanda.org/articles/aa/full_html/2020/02/aa35983-19/aa35983-19.html
 
-A probabilistic asteroid impact risk model: assessment of sub-300 m impacts: \n
+- ***A probabilistic asteroid impact risk model: assessment of sub-300 m impacts***
 https://www.sciencedirect.com/science/article/pii/S0019103516307126
 
 ---
