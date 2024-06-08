@@ -17,60 +17,51 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import typing
+import typing import List, Tuple
 import bittensor as bt
 
-# TODO(developer): Rewrite with your protocol definition.
-
-# This is the protocol for the dummy miner and validator.
-# It is a simple request-response protocol where the validator sends a request
-# to the miner, and the miner responds with a dummy response.
-
-# ---- miner ----
-# Example usage:
-#   def dummy( synapse: Dummy ) -> Dummy:
-#       synapse.dummy_output = synapse.dummy_input + 1
-#       return synapse
-#   axon = bt.axon().attach( dummy ).serve(netuid=...).start()
-
-# ---- validator ---
-# Example usage:
-#   dendrite = bt.dendrite()
-#   dummy_output = dendrite.query( Dummy( dummy_input = 1 ) )
-#   assert dummy_output == 2
-
-
-class Dummy(bt.Synapse):
+class Predict(bt.Synapse):
     """
-    A simple dummy protocol representation which uses bt.Synapse as its base.
-    This protocol helps in handling dummy request and response communication between
-    the miner and the validator.
-
-    Attributes:
-    - dummy_input: An integer value representing the input request sent by the validator.
-    - dummy_output: An optional integer value which, when filled, represents the response from the miner.
+    This class represents a predictive model that utilizes the previous coordinates of an asteroid
+    to compute its future trajectory. The model takes into account various physical parameters such
+    as gravity, velocity, torque, angular momentum, and relativistic effects to enhance the accuracy of the prediction.
     """
 
-    # Required request input, filled by sending dendrite caller.
-    dummy_input: int
+    # Gravitational constant affecting the asteroid (m/s^2)
+    gravity: float = None
 
-    # Optional request output, filled by recieving axon.
-    dummy_output: typing.Optional[int] = None
+    # Constant velocity of the asteroid in space (m/s)
+    velocity_constant: float = None
 
-    def deserialize(self) -> int:
-        """
-        Deserialize the dummy output. This method retrieves the response from
-        the miner in the form of dummy_output, deserializes it and returns it
-        as the output of the dendrite.query() call.
+    # Torque affecting the asteroid's rotational motion (N·m)
+    torque: float = None
 
-        Returns:
-        - int: The deserialized response, which in this case is the value of dummy_output.
+    # Angular momentum of the asteroid (kg·m^2/s)
+    angular_momentum: float = None
 
-        Example:
-        Assuming a Dummy instance has a dummy_output value of 5:
-        >>> dummy_instance = Dummy(dummy_input=4)
-        >>> dummy_instance.dummy_output = 5
-        >>> dummy_instance.deserialize()
-        5
-        """
-        return self.dummy_output
+    # Relativistic factor to account for velocities approaching the speed of light, dimensionless
+    lorentz_factor: float = None
+
+    # Mass of the asteroid (kg)
+    asteroid_mass: float = None
+
+    # Time dilation factor due to gravitational time dilation, dimensionless
+    gravitational_time_dilation: float = None
+
+    # List of tuples representing the asteroid's previous coordinates in a 3D space (x, y, z)
+    previous_coordinates: List[Tuple[float, float, float]]
+
+    # List of tuples predicting the asteroid's coordinates in the next 5 minutes (x, y, z)
+    predicted_coordinates: List[Tuple[float, float, float]] = None
+
+    # List of tuples representing the asteroid's velocity vectors at previous coordinates (vx, vy, vz)
+    previous_velocities: List[Tuple[float, float, float]] = None
+
+    # List of tuples representing the asteroid's acceleration vectors at previous coordinates (ax, ay, az)
+    previous_accelerations: List[Tuple[float, float, float]] = None
+
+    # List of tuples representing the asteroid's jerk (rate of change of acceleration) vectors at previous coordinates (jx, jy, jz)
+    previous_jerks: List[Tuple[float, float, float]] = None
+
+    # List of tuples representing the asteroid's snap (rate of change of jerk) vectors at previous coordinates (sx, sy, sz)
+    previous_snaps: List[Tuple[float, float, float]] = None
