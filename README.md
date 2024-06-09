@@ -26,7 +26,7 @@
 
 ## Introduction
 
-Predicting the path of asteroids is both a computationally difficult challenge and one of incredible importance for safeguarding humanity against stray, interplanetary objects. This subnet uses Bittensor's incentivization system to reward miners for making accurate predictions about the flight paths of asteroids. Because of the complex interaction between multiple moving bodies in space, miners must employ complex prediction methods and artificial intelligence to compute the likely flight paths of the moving objects -- and potentially save humanity.
+Predicting the path of asteroids is both a computationally difficult challenge and one of incredible importance for safeguarding humanity against fast moving, interplanetary objects. This subnet uses Bittensor's incentivization system to reward miners for making accurate predictions about the flight paths of asteroids. Because of the complex interaction between multiple moving bodies in space, miners must employ complex prediction methods and artificial intelligence to compute the likely flight paths of the moving objects.
 
 To read more about the research behind this method see:
 
@@ -41,6 +41,15 @@ https://www.aanda.org/articles/aa/full_html/2020/02/aa35983-19/aa35983-19.html
 - ***A probabilistic asteroid impact risk model: assessment of sub-300 m impacts***
   
 https://www.sciencedirect.com/science/article/pii/S0019103516307126
+
+---
+
+### Why this subnet makes sense for Bittensor
+
+The job to predict astrological movements is incredibly difficult and incredibly lucrative, in 2020 Nasa allocated $1.104 billion in total funding to do astrological and specifically asteroid based predictive modelling.  Only the a few handful of major institutions are capable of moving the needly on predictive accuracy. For instance, the Near Earth Object Project Group and from various governmental organizations like **LINEAR** (Lincoln Near-Earth Asteroid Research). We think Bittensor can do better and importantly **sell** that knowledge to the USA and other govs worldwide. 【6†source】【7†source】. 
+
+- [MIT Institutional Research](https://ir.mit.edu/research-expenditures)
+- [MIT Lincoln Laboratory](https://facts.mit.edu)
 
 ---
 

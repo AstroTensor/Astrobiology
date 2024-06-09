@@ -83,3 +83,6 @@ class Predict(bt.Synapse):
 
     # Dictionary containing the predicted values for various physical parameters
     prediction_dict: dict = None
+      
+    # Dynamic markov simulation weights
+    weights: Dict[str, float] = None

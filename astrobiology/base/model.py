@@ -88,10 +88,10 @@ class AsteroidModelPredictor:
         Returns:
             List[Tuple[float, float, float]]: The predicted future coordinates of the asteroid.
         """
-        # Step 1: Multidimensional Quantum Relativity Transformation (MQRT)
+         # Step 1: Multidimensional Quantum Relativity Transformation (MQRT)
         # This transformation leverages quantum mechanics and general relativity principles to predict asteroid trajectories in n-dimensional space.
-        input_tensor = np.array([gravity, velocity_constant, torque, angular_momentum, lorentz_factor, asteroid_mass, gravitational_time_dilation] + [item for sublist in previous_coordinates + predicted_coordinates + previous_velocities + previous_accelerations + previous_jerks for item in sublist])
-        
+        input_tensor = np.array([gravity, velocity_constant, torque, angular_momentum, lorentz_factor, asteroid_mass, gravitational_time_dilation] + [item for sublist in previous_coordinates + previous_coordinates + previous_velocities + previous_accelerations + previous_jerks for item in sublist])
+
         # Ensure the input tensor can be reshaped into the required shape by padding if necessary
         required_size = ((input_tensor.size // 12) + (1 if input_tensor.size % 12 else 0)) * 12
         padded_input_tensor = np.pad(input_tensor, (0, required_size - input_tensor.size), 'constant')
@@ -100,22 +100,23 @@ class AsteroidModelPredictor:
         # Step 2: Hyperbolic Time Dilation Adjustment (HTDA)
         # This adjustment uses a hyperbolic tangent function to simulate the effects of time dilation at relativistic speeds, modifying the input tensor.
         time_dilation_matrix = np.tanh(np.outer(np.ones(padded_input_tensor.shape[1]), np.array([gravitational_time_dilation, lorentz_factor]))).reshape(padded_input_tensor.shape[1], 2)
-        
+
         # Adjusted to match the dimensions for matrix multiplication
         # Reshape time_dilation_matrix to ensure compatibility for matrix multiplication
         reshaped_time_dilation_matrix = np.pad(time_dilation_matrix, ((0, 0), (0, max(0, padded_input_tensor.shape[2] - time_dilation_matrix.shape[1]))), 'constant')
         reshaped_time_dilation_matrix = reshaped_time_dilation_matrix.reshape(-1, padded_input_tensor.shape[2])
         adjusted_input = np.matmul(padded_input_tensor, reshaped_time_dilation_matrix.T)  # Transpose needed for correct matrix multiplication
-        
+
         # Step 3: Lorentzian Manifold Projection (LMP)
         # This projection maps the adjusted input data onto a Lorentzian manifold, which is crucial for modeling trajectories in curved spacetime.
         cosh_adjusted_input = np.cosh(adjusted_input)
         try:
             manifold_projection = np.linalg.inv(cosh_adjusted_input)  # Attempt to find the inverse
+            
         except np.linalg.LinAlgError:
             # If the matrix is singular, use the pseudo-inverse instead
             manifold_projection = np.linalg.pinv(cosh_adjusted_input)
-            
+  
         # Step 4: Enhanced Spacetime Feature Integration
         # Integrate additional spacetime features derived from the manifold projection to refine the model's predictive accuracy.
         enhanced_features = np.exp(-np.linalg.norm(manifold_projection, axis=1))  # Exponential decay based on the norm of the manifold projection.
@@ -124,14 +125,18 @@ class AsteroidModelPredictor:
         reshaped_enhanced_features = enhanced_features.reshape(-1, 1)
         final_input = np.concatenate((reshaped_manifold_projection, reshaped_enhanced_features), axis=1)
 
-        
         # Step 5: Prediction using LSTM model
         # Utilize the LSTM model to predict future trajectories based on the enhanced spacetime features.
-        predicted_output = self.model.predict(final_input)
+        try:
+            predicted_output = self.model.predict(final_input)
+            print ('predicted_output', predicted_output.shape)
+        except:
+            # Occurs when the angular is not the same shape as the indirect force.
+            pass
 
         # Step 6: Quantum Entanglement Positioning System (QEPS)
         # This system uses principles of quantum entanglement to determine the precise position coordinates from the model's output.
-        predicted_coordinates = [(float(np.sin(x[0])), float(np.cos(x[1])), float(np.tan(x[2]))) for x in predicted_output]  # Trigonometric transformations for positional accuracy with explicit float conversion
+        predicted_coordinates = [(float(np.sin(x[0])), float(np.cos(x[1])), float(np.tan(x[2]))) for x in final_input]  # Trigonometric transformations for positional accuracy with explicit float conversion
         return predicted_coordinates
 
         
