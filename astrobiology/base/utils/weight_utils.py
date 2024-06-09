@@ -165,9 +165,7 @@ def process_weights_for_netuid(
     print("non_zero_weights", non_zero_weights)
 
     # Compute the exclude quantile and find the weights in the lowest quantile
-    max_exclude = max(0, len(non_zero_weights) - min_allowed_weights) / len(
-        non_zero_weights
-    )
+    max_exclude = max(0, non_zero_weights.size - min_allowed_weights) / non_zero_weights.size
     exclude_quantile = min([quantile, max_exclude])
     lowest_quantile = np.quantile(non_zero_weights, exclude_quantile)
     print("max_exclude", max_exclude)

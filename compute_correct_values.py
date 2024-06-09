@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List, Tuple
-from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature, some_other_complex_equation
+from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 from utils.constants import G, M_sun, c
 from reward import calculate_score
 from protocol import Predict

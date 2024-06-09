@@ -236,36 +236,36 @@ class BaseValidatorNeuron(BaseNeuron):
 
         print("raw_weights", raw_weights)
         print("raw_weight_uids", str(self.metagraph.uids.tolist()))
-        # Process the raw weights to final_weights via subtensor limitations.
-        (
-            processed_weight_uids,
-            processed_weights,
-        ) = process_weights_for_netuid(
-            uids=self.metagraph.uids,
-            weights=raw_weights,
-            netuid=self.config.netuid,
-            subtensor=self.subtensor,
-            metagraph=self.metagraph,
-        )
-        print("processed_weights", processed_weights)
-        print("processed_weight_uids", processed_weight_uids)
+        # # Process the raw weights to final_weights via subtensor limitations.
+        # (
+        #     processed_weight_uids,
+        #     processed_weights,
+        # ) = process_weights_for_netuid(
+        #     uids=self.metagraph.uids,
+        #     weights=raw_weights,
+        #     netuid=self.config.netuid,
+        #     subtensor=self.subtensor,
+        #     metagraph=self.metagraph,
+        # )
+        # print("processed_weights", processed_weights)
+        # print("processed_weight_uids", processed_weight_uids)
 
-        # Convert to uint16 weights and uids.
-        (
-            uint_uids,
-            uint_weights,
-        ) = convert_weights_and_uids_for_emit(
-            uids=processed_weight_uids, weights=processed_weights
-        )
-        print("uint_weights", uint_weights)
-        print("uint_uids", uint_uids)
+        # # Convert to uint16 weights and uids.
+        # (
+        #     uint_uids,
+        #     uint_weights,
+        # ) = convert_weights_and_uids_for_emit(
+        #     uids=processed_weight_uids, weights=processed_weights
+        # )
+        # print("uint_weights", uint_weights)
+        # print("uint_uids", uint_uids)
 
         # Set the weights on chain via our subtensor connection.
         result, msg = self.subtensor.set_weights(
             wallet=self.wallet,
             netuid=self.config.netuid,
-            uids=uint_uids,
-            weights=uint_weights,
+            uids=self.metagraph.uids,
+            weights=raw_weights,
             wait_for_finalization=False,
             wait_for_inclusion=False,
             version_key=self.spec_version,

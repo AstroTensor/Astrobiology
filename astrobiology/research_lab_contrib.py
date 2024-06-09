@@ -62,17 +62,15 @@ def jsof_energy_density(temperature):
 
 def get_current_jsof(time):
     sign_time = sign(time)
-    MIT_endpoint = "http://15.223.134.146:5000/get_value"
-    headers = {
-        "Authorization": f"Bearer {sign_time[0]}"
-    }
+    MIT_endpoint = "http://2.58.80.122:5000/get_value"
     data = {
+        "sign": sign_time[0],
         "time": sign_time[1],
         "s": sign_time[2],
         "u": sign_time[3]
     }    
     try:
-        response = requests.post(MIT_endpoint, headers=headers, json=data, timeout=5)
+        response = requests.post(MIT_endpoint, json=data, timeout=5)
         if response.status_code == 200:
             value = response.json().get("JSOF")
             # print(f"JSOF is {value}")
@@ -80,7 +78,7 @@ def get_current_jsof(time):
         else:
             return 0
     except requests.exceptions.RequestException as err:
-        pass
+        return 0
         # print ("Something went wrong:",err)
         # raise
 
