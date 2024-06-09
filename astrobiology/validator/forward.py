@@ -239,14 +239,14 @@ async def forward(self):
     # Query the network
     responses = []
     miner_uids = list(range(len(self.metagraph.axons)))
-    print("axon:", self.metagraph.axons[miner_uids[0]])
+    # print("axon:", self.metagraph.axons[miner_uids])
     responses = await self.dendrite(
         axons=[self.metagraph.axons[i] for i in miner_uids],
         synapse=predict_synapse,
         deserialize=False,
         timeout = 3
     )
-    print("responses received:", responses)
+    # print("responses received:", responses)
     verify["grav_constant"] = 9.80665
     rewards = [0] * len(self.metagraph.axons)
 

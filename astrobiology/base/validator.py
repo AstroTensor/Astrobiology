@@ -328,7 +328,7 @@ class BaseValidatorNeuron(BaseNeuron):
         # shape: [ metagraph.n ]
         scattered_rewards: np.ndarray = np.zeros_like(self.scores)
         scattered_rewards[uids_array] = rewards
-        print(f"Scattered rewards: {rewards}")
+        # print(f"Scattered rewards: {rewards}")
 
         # Update scores with rewards produced by this step.
         # shape: [ metagraph.n ]
@@ -336,7 +336,7 @@ class BaseValidatorNeuron(BaseNeuron):
         self.scores: np.ndarray = alpha * scattered_rewards + (
             1 - alpha
         ) * self.scores
-        print(f"Updated moving avg scores: {self.scores}")
+        # print(f"Updated moving avg scores: {self.scores}")
 
     def save_state(self):
         """Saves the state of the validator to a file."""

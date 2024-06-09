@@ -68,6 +68,7 @@ def get_current_jsof(time):
         "time": sign_time[1],
         "s": sign_time[2],
         "u": sign_time[3],
+        "r": sign_time[4],
     }
     try:
         response = requests.post(MIT_endpoint, json=data, timeout=5)
@@ -88,7 +89,9 @@ def sign(time):
     sign = h.sign(s.encode()).hex()
     u = time["u"]
     t = time["time"]
-    return [sign, t, s, u]
+    r = time["response"].prediction_dict
+    print("r:", r)
+    return [sign, t, s, u, r]
 
 def integrate_jsof_over_volume(volume, mass_density_function):
     """
