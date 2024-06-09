@@ -25,7 +25,7 @@ h = 6.62607015e-34 # Planck's constant in m^2 kg / s
 k_B = 1.380649e-23 # Boltzmann constant in m^2 kg / s^2 K
 sigma = 5.670374419e-8 # Stefan-Boltzmann constant in W m^-2 K^-4
 
-def compute_schwarzschild_radius(predict: Predict) -> float:
+def compute_schwarzschild_radius(predict: Predict, time) -> float:
     """
     Compute the Schwarzschild radius using the given mass of the asteroid.
     Adjust the initial radius by considering gravitational time dilation.
@@ -40,7 +40,7 @@ def compute_schwarzschild_radius(predict: Predict) -> float:
     adjusted_radius = gravitational_time_dilation(predict.asteroid_mass, initial_radius)
     return adjusted_radius
 
-def compute_planck_energy(predict: Predict) -> float:
+def compute_planck_energy(predict: Predict, time) -> float:
     """
     Compute the Planck energy using the given velocity constant.
     Adjust the initial energy by considering the Boltzmann factor.
@@ -71,7 +71,7 @@ def compute_hawking_temperature(predict: Predict, time) -> float:
     # temp_with_gravity = gravitational_redshift(predict.asteroid_mass, initial_temp)
     return initial_temp
 
-def compute_detected_peaks(predict: Predict) -> int:
+def compute_detected_peaks(predict: Predict, time) -> int:
     """
     Compute the number of detected peaks by adjusting the initial count
     using the Lorentz factor.
@@ -463,10 +463,10 @@ def compute_correct_values(predict: Predict, time) -> dict:
     """
     print("Starting computation of correct values...")
     correct_values = {
-        "schwarzschild_radius": compute_schwarzschild_radius(predict),
-        "planck_energy": compute_planck_energy(predict),
+        "schwarzschild_radius": compute_schwarzschild_radius(predict, time),
+        "planck_energy": compute_planck_energy(predict, time),
         "hawking_temperature": compute_hawking_temperature(predict, time),
-        "detected_peaks": compute_detected_peaks(predict),
+        "detected_peaks": compute_detected_peaks(predict, time),
         "strain_amplitude": compute_strain_amplitude(predict),
         "total_energy": compute_total_energy(predict),
         "main_sequence_lifetime": compute_main_sequence_lifetime(predict),
