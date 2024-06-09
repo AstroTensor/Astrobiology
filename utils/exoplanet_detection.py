@@ -1,6 +1,8 @@
 import numpy as np
-from scipy.constants import G, pi, R_sun, M_sun
-from directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+from scipy.constants import G, pi
+from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+R_sun = 6.957e8  # Solar radius in meters
+M_sun = 1.989e30  # Solar mass in kg
 
 def transit_depth(planet_radius, star_radius):
     """

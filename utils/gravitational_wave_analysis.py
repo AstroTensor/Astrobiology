@@ -2,7 +2,7 @@ import numpy as np
 from scipy.signal import find_peaks
 from scipy.integrate import simps
 from scipy.fft import fft, fftfreq
-from directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 
 def detect_gravitational_waves(signal, threshold=0.001):
     """

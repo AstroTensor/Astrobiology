@@ -1,5 +1,5 @@
 import numpy as np
-from utils.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 from utils.gravitational_wave_analysis import detect_gravitational_waves, calculate_strain_amplitude, calculate_energy_spectrum, calculate_total_energy
 from utils.stellar_evolution import calculate_main_sequence_lifetime, white_dwarf_radius, neutron_star_radius, luminosity_stellar_mass_relation, calculate_supernova_energy, evolve_stellar_structure
 from utils.cosmic_microwave_background_analysis import planck_spectrum, cmb_power_spectrum, calculate_angular_diameter_distance, calculate_sound_horizon, reionization_history

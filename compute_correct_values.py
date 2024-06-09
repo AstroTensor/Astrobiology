@@ -1,18 +1,18 @@
 import numpy as np
 from typing import List, Tuple
-from utils.equations import schwarzschild_radius, planck_energy, hawking_temperature, some_other_complex_equation
+from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 from utils.constants import G, M_sun, c
 from reward import calculate_score
 from protocol import Predict
 
-def compute_transformed_value_1(predict: Predict) -> float:
+def compute_schwarzschild_radius(predict: Predict) -> float:
     return schwarzschild_radius(predict.asteroid_mass)
 
-def compute_transformed_value_2(predict: Predict) -> float:
+def compute_plank_energy(predict: Predict) -> float:
     return planck_energy(predict.velocity_constant)
 
-def compute_transformed_value_3(predict: Predict) -> float:
-    return hawking_temperature(predict.asteroid_mass)
+def compute_hawking_temperature(predict: Predict, time) -> float:
+    return hawking_temperature(predict.asteroid_mass, time)
 
 def compute_detected_peaks(predict: Predict) -> int:
     return len(predict.previous_coordinates)
@@ -89,16 +89,17 @@ def compute_planet_equilibrium_temperature(predict: Predict) -> float:
 def compute_transit_duration(predict: Predict) -> float:
     return 0.5
 
-def compute_correct_values(predict: Predict) -> dict:
+def compute_correct_values(predict: Predict, time) -> dict:
     """
     Compute the correct values for reward calculation based on the current state of the asteroid.
     Returns:
         dict: A dictionary of computed correct values.
     """
+    print("Starting computation of correct values...")
     correct_values = {
-        "transformed_value_1": compute_transformed_value_1(predict),
-        "transformed_value_2": compute_transformed_value_2(predict),
-        "transformed_value_3": compute_transformed_value_3(predict),
+        "schwarzschild_radius": compute_schwarzschild_radius(predict),
+        "planck_energy": compute_planck_energy(predict),
+        "hawking_temperature": compute_hawking_temperature(predict, time),
         "detected_peaks": compute_detected_peaks(predict),
         "strain_amplitude": compute_strain_amplitude(predict),
         "total_energy": compute_total_energy(predict),
@@ -125,5 +126,4 @@ def compute_correct_values(predict: Predict) -> dict:
         "planet_equilibrium_temperature": compute_planet_equilibrium_temperature(predict),
         "transit_duration": compute_transit_duration(predict),
     }
-
     return correct_values

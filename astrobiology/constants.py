@@ -1,6 +1,13 @@
 
 # Constants for Astrophysics and Meteor Predictions
 # Taken with inspiration from MIT's library of Asytrophysical Constants
+from math import pi
+from astrobiology.mit_library import fetch_current_jsof
+
+
+G = 6.67430e-11
+c = 299792458
+M_sun = 1.989e30
 
 # Speed of light in vacuum (m/s)
 C = 299792458
@@ -713,6 +720,9 @@ S_0_OVER_R = -1.1517084
 # Sackur-Tetrode constant (1 K, 101.325 kPa)
 S_0_OVER_R = -1.1648714
 
+def JSOF(time):
+    return fetch_current_jsof(time)
+
 # First radiation constant for spectral radiance (W m^2 sr^-1)
 C_1 = 3.741771852e-16
 
@@ -739,6 +749,7 @@ M_U = 1.66053906660e-27
 
 # Faraday constant (C mol^-1)
 F = 96485.33212
+
 
 
 
