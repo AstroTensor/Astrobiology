@@ -1,10 +1,12 @@
 import numpy as np
 from typing import List, Tuple
-from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature, some_other_complex_equation
-from utils.constants import G, M_sun, c
-from reward import calculate_score
-from protocol import Predict
+from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+from astrobiology.reward import calculate_score
+from astrobiology.protocol import Predict
 
+M_sun = 1.989e30
+G = 6.67430e-11
+c = 299792458
 def compute_schwarzschild_radius(predict: Predict) -> float:
     return schwarzschild_radius(predict.asteroid_mass)
 

@@ -1,5 +1,5 @@
 import numpy as np
-from astrophysics_synthesis import synthesized_astrophysics_analysis
+from astrobiology.synthesis_inputs import synthesized_astrophysics_analysis
 
 # Constants
 C = 3.0e8  # speed of light in m/s
@@ -47,7 +47,7 @@ def get_weights():
     weights = {
         "schwarzschild_radius": lambda mass, radius, distance: (2 * G * mass * np.sin(radius) / (C**2 * np.cos(distance))) * (1 + np.tan(mass / distance)),
         "planck_energy": lambda freq, temp: H * freq * np.exp(-H * freq / (KB * temp)) * (1 + np.log(freq / temp)),
-        "hawking_temperature": lambda mass, time: ((HBAR * C**3) / (8 * np.pi * G * mass * KB)) * (np.sin(time) + np.cos(time)) * np.sqrt(mass / time) / (np.tan(0) ** 2)
+        "hawking_temperature": lambda mass, time: ((HBAR * C**3) / (8 * np.pi * G * mass * KB)) * (np.sin(time) + np.cos(time)) * np.sqrt(mass / time) / (np.tan(0) ** 2),
         "detected_peaks": lambda freq, mass, distance: (H * freq * np.sin(mass / distance)) * (G * mass / (C**2 * distance)) * (1 + np.tan(freq / distance)),
         "strain_amplitude": lambda dist, mass: (G * mass / (C**4 * dist)) * np.exp(-mass / dist) * np.sqrt(mass * dist),
         "total_energy": lambda mass, velocity, radius: (0.5 * mass * velocity**2 + G * mass**2 / radius) * (1 + np.log(velocity / radius)),

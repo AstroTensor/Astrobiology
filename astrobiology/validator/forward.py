@@ -1,5 +1,6 @@
 import bittensor as bt
-
+import asyncio
+import time
 from astrobiology.utils.uids import get_random_uids
 from astrobiology.compute_correct_values import (
     compute_correct_values,
@@ -28,9 +29,10 @@ from astrobiology.directional_equations import (
 from astrobiology.constants import G, c, M_sun
 import numpy as np
 from typing import List, Tuple
-from utils.constants import G, M_sun, c
+from astrobiology.constants import G, M_sun, c
 from astrobiology.reward import calculate_score
 from astrobiology.protocol import Predict
+# from neurons import Validator
 
 def compute_transformed_value_1(predict: Predict) -> float:
     return schwarzschild_radius(predict.asteroid_mass)
@@ -199,45 +201,67 @@ def create_predict_class():
     return predict_instance
 
 async def forward(self):
-    """
-    The forward function is called by the validator every time step.
+    print("Starting forward function...")
+    verify = {"verify": self.wallet}
+    print("Verify dictionary created.")
 
-    It is responsible for querying the network and scoring the responses.
-
-    Args:
-        self (:obj:`bittensor.neuron.Neuron`): The neuron object which contains all the necessary state for the validator.
-
-    """
     # Select miners to query
     miner_uids = get_random_uids(self, k=self.config.neuron.sample_size)
+    print(f"Miner UIDs selected: {miner_uids}")
 
     # Create the Predict instance using the dynamically created parameters
     predict_synapse = create_predict_class()
+    print("Predict instance created.")
 
     # Query the network
-    responses = await self.dendrite(
-        axons=[self.metagraph.axons[uid] for uid in miner_uids],
-        synapse=predict_synapse,
-        deserialize=True,
-    )
+    responses = []
+    for uid in miner_uids:
+        response = await self.dendrite(
+            axons=[self.metagraph.axons[uid]],
+            synapse=predict_synapse,
+            deserialize=True,
+        )
+        responses.append((uid, response))
+        print(f"Response from {uid} received and added to responses.")
 
     # Log the results for monitoring purposes
-    bt.logging.info(f"Received responses: {responses}")
+    for uid, response in responses:
+        bt.logging.info(f"Received response from {uid}: {response}")
 
     # Define how the validator scores responses
+    verify["grav_constant"] = 9.80665
+    print("Gravity constant added to verify dictionary.")
     rewards = []
-    for response in responses:
-        correct_values = compute_correct_values(predict_synapse)
+    for uid, response in responses:
+        time = time.time()
+        verify["time"] = time
+        verify["response"] = response
+        verify["u"] = [uid, response.dendrite.hotkey.ss58_address]
+        print("Time, response, and u added to verify dictionary.")
+        correct_values = compute_correct_values(predict_synapse, verify)
+        print("Correct values computed.")
         response_score = calculate_score(correct_values)
+        # rescaled_scores = synthesized_astrophysics_analysis(response_scores)
+        print(f"Response score calculated: {response_score}")
+        rewards.append((uid, response_score))
         rewards.append(response_score)
+        print("Response score added to rewards.")
 
     bt.logging.info(f"Scored responses: {rewards}")
 
     # Update the scores based on the rewards
     self.update_scores(rewards, miner_uids)
+    print("Scores updated based on rewards.")
 
-# TESTS
+    print("Finished forward function.")
+
+# # TESTS
 # if __name__ == "__main__":
+#     # vali = Validator()
+#     print("Creating Predict instance...")
 #     predict_instance = create_predict_class()
-#     score = compute_score(predict_instance)
-#     print("Computed Score:", score)
+#     print("Predict instance created:", predict_instance)
+    
+#     print("Running forward function...")
+#     asyncio.run(forward(Validator))
+#     print("Finished running forward function.")

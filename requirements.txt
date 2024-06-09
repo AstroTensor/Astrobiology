@@ -2,3 +2,4 @@ bittensor
 numpy
 tensorflow
 astropy
+scipy

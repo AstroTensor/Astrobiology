@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.integrate import quad
 from scipy.constants import c, h, k
-from directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 
 def planck_spectrum(temperature, frequency):
     """

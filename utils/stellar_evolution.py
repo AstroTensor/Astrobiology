@@ -2,7 +2,7 @@
 
 import numpy as np
 from scipy.integrate import solve_ivp
-from directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 
 def calculate_main_sequence_lifetime(mass):
     """
