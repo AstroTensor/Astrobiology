@@ -32,16 +32,17 @@ def fill_dynamic_arguments_based_on_prediction(prediction, synapse):
         """
         try:
             # Apply exponential decay or growth based on the key with additional logarithmic or trigonometric adjustments
-            if key == "transformed_value_1":
+            if key == "schwarzschild_radius":
                 result = np.exp(value) / (np.log(index + 1) + 1)
-            elif key == "transformed_value_2":
+            elif key == "hawking_temperature":
                 result = np.cos(value * np.pi / index) ** 2
-            elif key == "transformed_value_3":
+            elif key == "total_energy":
                 result = np.tanh(value / (index + 1)) * np.sqrt(abs(value))
             elif key == "detected_peaks":
                 result = (np.sin(value) + np.cos(index)) ** 2
-            elif key == "strain_amplitude":
+            elif key == "final_core_mass":
                 result = np.log(value + 1) * np.sin(index)
+            # TODO miner fill in these with the optimized values based on the predicted coordinates (the above are just simplistic placeholders as example)
             else:
                 result = np.random.normal(loc=0, scale=1)  # Default random calculation
             return result
@@ -52,12 +53,33 @@ def fill_dynamic_arguments_based_on_prediction(prediction, synapse):
     weights = {}
     base_values = [1.0, 2.0, 1.5, 1.2, 2.0, 1.0, 1.0, 1.5, 2.5, 1.5, 1.5, 1.0, 1.2, 2.0, 2.0, 1.0, 1.0, 1.2, 2.0, 1.0, 1.5, 1.5, 1.0, 1.0, 1.0, 1.5]
     keys = [
-        "transformed_value_1", "transformed_value_2", "transformed_value_3", "detected_peaks", "strain_amplitude",
-        "total_energy", "main_sequence_lifetime", "white_dwarf_radius", "neutron_star_radius", "luminosity",
-        "supernova_energy", "final_core_mass", "final_envelope_mass", "planck_spectrum", "cmb_power_spectrum",
-        "angular_diameter_distance", "sound_horizon", "reionization_history", "dark_matter_density_profile",
-        "rotation_curve_velocity", "dark_matter_mass_within_radius", "lensing_deflection_angle", "transit_depth",
-        "radial_velocity_amplitude", "habitable_zone_inner", "habitable_zone_outer", "planet_equilibrium_temperature",
+        "schwarzschild_radius",
+        "planck_energy",
+        "hawking_temperature",
+        "detected_peaks",
+        "strain_amplitude",
+        "total_energy",
+        "main_sequence_lifetime",
+        "white_dwarf_radius",
+        "neutron_star_radius",
+        "luminosity",
+        "supernova_energy",
+        "final_core_mass",
+        "final_envelope_mass",
+        "planck_spectrum",
+        "cmb_power_spectrum",
+        "angular_diameter_distance",
+        "sound_horizon",
+        "reionization_history",
+        "dark_matter_density_profile",
+        "rotation_curve_velocity",
+        "dark_matter_mass_within_radius",
+        "lensing_deflection_angle",
+        "transit_depth",
+        "radial_velocity_amplitude",
+        "habitable_zone_inner",
+        "habitable_zone_outer",
+        "planet_equilibrium_temperature",
         "transit_duration"
     ]
 
@@ -72,9 +94,8 @@ def fill_dynamic_arguments_based_on_prediction(prediction, synapse):
     except:
         pass
 
-    synapse.weights = weights
+    synapse.prediction_dict = weights
     return synapse
-
 
 import unittest
 import numpy as np
