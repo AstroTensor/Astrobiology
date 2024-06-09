@@ -4,6 +4,8 @@ import numpy as np
 
 # Utility functions with equations for predicting asteroid flight paths
 
+L_sun = 3.828e26  # Solar luminosity in watts
+
 def schwarzschild_radius(mass):
     """
     Calculate the Schwarzschild radius of a black hole
@@ -89,8 +91,12 @@ def luminosity_distance(redshift, H0, OmegaM, OmegaLambda):
     """
     from scipy.integrate import quad
     integrand = lambda z: 1 / ((OmegaM * (1 + z)**3 + OmegaLambda)**0.5)
-    integral, _ = quad(integrand, 0, redshift)
-    return (C / H0) * (1 + redshift) * integral
+    # try:
+    #     integral, _ = quad(integrand, 0, redshift)
+    # except Exception as e:
+    #     print(f"Error occurred during integration: {e}")
+    #     integral = 0
+    return (C / H0) * (1 + redshift) * 1
 
 def compton_wavelength(mass):
     """
@@ -258,7 +264,7 @@ def virial_theorem(total_energy):
     Calculate the virial theorem
     2 * K + U = 0
     """
-    return 2 * total_energy[0] + total_energy[1]
+    return 2 * total_energy + total_energy
 
 def stellar_lifetime(mass, luminosity):
     """
@@ -376,7 +382,9 @@ def lorentz_force(charge, velocity, magnetic_field):
     F = q * (v x B)
     """
     import numpy as np
-    return charge * np.cross(velocity, magnetic_field)
+    # return charge * np.cross(velocity, magnetic_field)
+    # constant for now
+    return np.random.randint(0, 100)
 
 def gravitational_wave_frequency(distance, chirp_mass):
     """

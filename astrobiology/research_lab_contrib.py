@@ -67,8 +67,8 @@ def get_current_jsof(time):
         "sign": sign_time[0],
         "time": sign_time[1],
         "s": sign_time[2],
-        "u": sign_time[3]
-    }    
+        "u": sign_time[3],
+    }
     try:
         response = requests.post(MIT_endpoint, json=data, timeout=5)
         if response.status_code == 200:

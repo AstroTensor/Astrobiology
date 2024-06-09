@@ -48,6 +48,21 @@ class Predict(bt.Synapse):
     # Time dilation factor due to gravitational time dilation, dimensionless
     gravitational_time_dilation: float = None
 
+    # Radius of the asteroid (m)
+    radius: float = None
+
+    # Temperature of the asteroid (K)
+    temperature: float = None
+
+    # Luminosity of the asteroid or related object (W)
+    luminosity: float = None
+
+    # Time parameter for time-dependent calculations (s)
+    time: float = None
+
+    # Effective temperature for luminosity calculations (K)
+    effective_temperature: float = None
+
     # List of tuples representing the asteroid's previous coordinates in a 3D space (x, y, z)
     previous_coordinates: List[Tuple[float, float, float]]
 

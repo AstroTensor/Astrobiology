@@ -128,7 +128,11 @@ def compute_main_sequence_lifetime(predict: Predict) -> float:
     float: The adjusted main sequence lifetime.
     """
     lifetime = stellar_lifetime(predict.asteroid_mass, predict.luminosity)
-    adjusted_lifetime = lifetime * hubble_parameter(predict.velocity_constant)
+    H0 = predict.velocity_constant
+    Omega_m = 0.3
+    Omega_Lambda = 0.7
+    z = 0.0
+    adjusted_lifetime = lifetime * hubble_parameter(z, H0, Omega_m, Omega_Lambda)
     return adjusted_lifetime
 
 def compute_white_dwarf_radius(predict: Predict) -> float:
@@ -141,7 +145,8 @@ def compute_white_dwarf_radius(predict: Predict) -> float:
     Returns:
     float: The adjusted white dwarf radius.
     """
-    radius = chandrasekhar_limit(predict.asteroid_mass, predict.velocity_constant)
+    data_tuple = (predict.asteroid_mass, predict.velocity_constant)
+    radius = chandrasekhar_limit()
     adjusted_radius = radius * compton_wavelength(predict.asteroid_mass)
     return adjusted_radius
 
@@ -185,7 +190,7 @@ def compute_supernova_energy(predict: Predict) -> float:
     Returns:
     float: The adjusted supernova energy.
     """
-    virial_energy = virial_theorem(predict.asteroid_mass, predict.velocity_constant)
+    virial_energy = virial_theorem(predict.asteroid_mass)
     angular_momentum = specific_angular_momentum(predict.asteroid_mass, predict.velocity_constant)
     energy = virial_energy * angular_momentum
     adjusted_energy = energy * gravitational_redshift(predict.asteroid_mass, energy)
@@ -201,7 +206,8 @@ def compute_final_core_mass(predict: Predict) -> float:
     Returns:
     float: The adjusted final core mass.
     """
-    core_mass = jean_mass(predict.asteroid_mass, predict.velocity_constant)
+    density = 1.8e6
+    core_mass = jean_mass(predict.asteroid_mass, predict.velocity_constant, density)
     adjusted_core_mass = core_mass * escape_velocity(predict.asteroid_mass, predict.radius)
     return adjusted_core_mass
 
@@ -215,8 +221,9 @@ def compute_final_envelope_mass(predict: Predict) -> float:
     Returns:
     float: The adjusted final envelope mass.
     """
-    envelope_mass = roche_limit(predict.asteroid_mass, predict.velocity_constant)
-    adjusted_envelope_mass = envelope_mass / critical_density(predict.asteroid_mass, predict.radius)
+    secondary_density = 1.0
+    envelope_mass = roche_limit(predict.asteroid_mass, predict.velocity_constant, secondary_density)
+    adjusted_envelope_mass = envelope_mass / critical_density(predict.asteroid_mass)
     return adjusted_envelope_mass
 
 def compute_planck_spectrum(predict: Predict) -> float:
@@ -230,7 +237,10 @@ def compute_planck_spectrum(predict: Predict) -> float:
     float: The adjusted Planck spectrum.
     """
     spectrum = blackbody_spectrum(predict.asteroid_mass, predict.velocity_constant)
-    adjusted_spectrum = spectrum * hubble_parameter(predict.velocity_constant)
+    H0 = predict.velocity_constant
+    Omega_m = 0.3
+    Omega_Lambda = 0.7
+    adjusted_spectrum = spectrum * hubble_parameter(predict.velocity_constant, H0, Omega_m, Omega_Lambda)
     return adjusted_spectrum
 
 def compute_cmb_power_spectrum(predict: Predict) -> float:
@@ -244,7 +254,8 @@ def compute_cmb_power_spectrum(predict: Predict) -> float:
     float: The adjusted CMB power spectrum.
     """
     power_spectrum = gravitational_wave_frequency(predict.asteroid_mass, predict.velocity_constant)
-    adjusted_power_spectrum = power_spectrum * flux_density(predict.asteroid_mass)
+    distance = 3.8e16
+    adjusted_power_spectrum = power_spectrum * flux_density(predict.asteroid_mass, distance)
     return adjusted_power_spectrum
 
 def compute_angular_diameter_distance(predict: Predict) -> float:
@@ -257,8 +268,10 @@ def compute_angular_diameter_distance(predict: Predict) -> float:
     Returns:
     float: The adjusted angular diameter distance.
     """
-    lum_distance = luminosity_distance(predict.asteroid_mass, predict.velocity_constant)
-    hubble_param = hubble_parameter(predict.velocity_constant)
+    Omega_m = 0.3
+    Omega_Lambda = 0.7
+    lum_distance = luminosity_distance(predict.asteroid_mass, predict.velocity_constant, Omega_m, Omega_Lambda)
+    hubble_param = hubble_parameter(predict.velocity_constant, Omega_m, Omega_Lambda, 0.0)
     distance = lum_distance / hubble_param
     adjusted_distance = distance * parsec_to_lightyear(distance)
     return adjusted_distance
@@ -274,7 +287,8 @@ def compute_sound_horizon(predict: Predict) -> float:
     float: The adjusted sound horizon.
     """
     sound_horizon = blackbody_spectrum(predict.asteroid_mass, predict.velocity_constant)
-    adjusted_horizon = sound_horizon * virial_temperature(predict.asteroid_mass)
+    radius = predict.radius
+    adjusted_horizon = sound_horizon * virial_temperature(predict.asteroid_mass, radius)
     return adjusted_horizon
 
 def compute_reionization_history(predict: Predict) -> float:
@@ -288,7 +302,9 @@ def compute_reionization_history(predict: Predict) -> float:
     float: The adjusted reionization history.
     """
     history = predict.lorentz_factor * 0.5
-    adjusted_history = history * escape_fraction(predict.asteroid_mass)
+    cross_section = 1e-24
+    radius = predict.radius
+    adjusted_history = history * escape_fraction(predict.asteroid_mass, cross_section, radius)
     return adjusted_history
 
 def compute_dark_matter_density_profile(predict: Predict) -> float:
@@ -302,7 +318,7 @@ def compute_dark_matter_density_profile(predict: Predict) -> float:
     float: The adjusted dark matter density profile.
     """
     density_profile = predict.gravity * 0.3 / predict.velocity_constant
-    adjusted_profile = density_profile * critical_density(predict.asteroid_mass, predict.radius)
+    adjusted_profile = density_profile * critical_density(predict.asteroid_mass)
     return adjusted_profile
 
 def compute_rotation_curve_velocity(predict: Predict) -> float:
@@ -315,8 +331,9 @@ def compute_rotation_curve_velocity(predict: Predict) -> float:
     Returns:
     float: The adjusted rotation curve velocity.
     """
+    speed_of_sound = 343
     velocity = predict.velocity_constant * 200 / predict.gravity
-    adjusted_velocity = velocity * mach_number(predict.velocity_constant)
+    adjusted_velocity = velocity * mach_number(predict.velocity_constant, speed_of_sound)
     return adjusted_velocity
 
 def compute_dark_matter_mass_within_radius(predict: Predict) -> float:
@@ -344,7 +361,10 @@ def compute_lensing_deflection_angle(predict: Predict) -> float:
     float: The adjusted lensing deflection angle.
     """
     angle = predict.gravity * 1.0 / predict.velocity_constant
-    adjusted_angle = angle * hubble_law_velocity(predict.asteroid_mass)
+    H0 = predict.velocity_constant
+    Omega_m = 0.3
+    Omega_Lambda = 0.7
+    adjusted_angle = angle * hubble_law_velocity(predict.asteroid_mass, H0)
     return adjusted_angle
 
 def compute_transit_depth(predict: Predict) -> float:
@@ -358,7 +378,8 @@ def compute_transit_depth(predict: Predict) -> float:
     float: The adjusted transit depth.
     """
     depth = predict.asteroid_mass * 0.01 / M_sun
-    adjusted_depth = depth * lorentz_force(predict.velocity_constant, predict.asteroid_mass)
+    magnetic_field = 1e-9
+    adjusted_depth = depth * lorentz_force(predict.velocity_constant, predict.asteroid_mass, magnetic_field)
     return adjusted_depth
 
 def compute_radial_velocity_amplitude(predict: Predict) -> float:
@@ -371,8 +392,10 @@ def compute_radial_velocity_amplitude(predict: Predict) -> float:
     Returns:
     float: The adjusted radial velocity amplitude.
     """
+    magnetic_field = 1e-9
+    velocity = predict.velocity_constant
     amplitude = predict.velocity_constant * 10 / predict.gravity
-    adjusted_amplitude = amplitude * larmor_radius(predict.asteroid_mass, predict.velocity_constant)
+    adjusted_amplitude = amplitude * larmor_radius(predict.asteroid_mass, predict.velocity_constant, magnetic_field, velocity)
     return adjusted_amplitude
 
 def compute_habitable_zone_inner(predict: Predict) -> float:
@@ -409,7 +432,9 @@ def compute_planet_equilibrium_temperature(predict: Predict) -> float:
     Returns:
     float: The adjusted planet equilibrium temperature.
     """
-    temperature = 288 * (1 - escape_fraction(predict.asteroid_mass))
+    cross_section = 1e-24
+    radius = predict.radius
+    temperature = 288 * (1 - escape_fraction(predict.asteroid_mass, cross_section, radius))
     return temperature
 
 def compute_transit_duration(predict: Predict) -> float:
@@ -467,4 +492,5 @@ def compute_correct_values(predict: Predict, time) -> dict:
         "planet_equilibrium_temperature": compute_planet_equilibrium_temperature(predict),
         "transit_duration": compute_transit_duration(predict),
     }
+    print("Computation of correct values completed.", correct_values)
     return correct_values

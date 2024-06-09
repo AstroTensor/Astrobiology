@@ -24,6 +24,7 @@ import asyncio
 import argparse
 import threading
 import bittensor as bt
+import traceback
 
 from typing import List, Union
 from traceback import print_exception
@@ -166,7 +167,7 @@ class BaseValidatorNeuron(BaseNeuron):
 
         # In case of unforeseen errors, the validator will log the error and continue operations.
         except Exception as err:
-            print(f"Error during validation: {str(err)}")
+            print(f"Error during validation: {traceback.format_exc()}")
             print(
                 str(print_exception(type(err), err, err.__traceback__))
             )

@@ -120,7 +120,7 @@ def compute_transit_duration(predict: Predict) -> float:
 
 def create_predict_class():
     """
-    Create the Predict class dynamically using equations from equations.py
+    Create the Predict class dynamically using equations from equations.py.
     """
     def generate_mass():
         """
@@ -158,12 +158,33 @@ def create_predict_class():
         """
         return np.random.uniform(1e9, 1e11) 
 
+    def generate_temperature():
+        """
+        Generate a temperature value for the asteroid (in K) within a plausible range.
+        """
+        return np.random.uniform(100, 1000) 
+
+    def generate_luminosity():
+        """
+        Generate a luminosity value for the asteroid (in W) within a plausible range.
+        """
+        return np.random.uniform(1e20, 1e30)
+
+    def generate_time():
+        """
+        Generate a time value for the asteroid's lifecycle (in seconds) within a plausible range.
+        """
+        return np.random.uniform(1e5, 1e9)
+
     mass = generate_mass()
     velocity = generate_velocity()
     radius = generate_radius()
     distance = generate_distance()
     frequency = generate_frequency()
     chirp_mass = generate_chirp_mass()
+    temperature = generate_temperature()
+    luminosity = generate_luminosity()
+    time = generate_time()
 
     gravity = G * mass / radius**2
     velocity_constant = velocity
@@ -191,13 +212,17 @@ def create_predict_class():
         lorentz_factor=lorentz,
         asteroid_mass=mass,
         gravitational_time_dilation=time_dilation,
+        radius=radius,
+        temperature=temperature,
+        luminosity=luminosity,
+        time=time,
         previous_coordinates=previous_coordinates,
         previous_velocities=previous_velocities,
         previous_accelerations=previous_accelerations,
         previous_jerks=previous_jerks,
         previous_snaps=previous_snaps
     )
-
+    
     return predict_instance
 
 async def forward(self):
@@ -214,14 +239,14 @@ async def forward(self):
     # Query the network
     responses = []
     miner_uids = list(range(len(self.metagraph.axons)))
-    # miner_uids = [2, 3]
+    print("axon:", self.metagraph.axons[miner_uids[0]])
     responses = await self.dendrite(
         axons=[self.metagraph.axons[i] for i in miner_uids],
         synapse=predict_synapse,
         deserialize=False,
         timeout = 3
     )
-    # print("responses received:", responses)
+    print("responses received:", responses)
     verify["grav_constant"] = 9.80665
     rewards = [0] * len(self.metagraph.axons)
 
@@ -245,7 +270,6 @@ async def forward(self):
     # Update the scores based on the rewards
     self.update_scores(rewards, miner_uids)
     print("Scores updated based on rewards.")
-
     print("Finished forward function.")
 
 # # TESTS
