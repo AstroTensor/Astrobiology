@@ -126,5 +126,4 @@ def compute_correct_values(predict: Predict, time) -> dict:
         "planet_equilibrium_temperature": compute_planet_equilibrium_temperature(predict),
         "transit_duration": compute_transit_duration(predict),
     }
-    print(f"Finished computation of correct values. {correct_values}")
     return correct_values

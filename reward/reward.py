@@ -78,23 +78,11 @@ def get_weights():
     return weights
 
 def normalize_weights(weight_values):
-    has_infinite = any(not np.isfinite(value) for value in weight_values.values())
-    
-    normalized_weights = {}
-    if has_infinite:
-        for key, value in weight_values.items():
-            if np.isfinite(value):
-                normalized_weights[key] = 0.0
-            else:
-                normalized_weights[key] = 1.0
-    else:
-        finite_total = sum(weight_values.values())
-        for key, value in weight_values.items():
-            normalized_weights[key] = value / finite_total
-    
+    total = sum(weight_values.values())
+    normalized_weights = {key: value / total for key, value in weight_values.items()}
     return normalized_weights
 
-def calculate_score(inputs, correct_values):
+def calculate_score(results, correct_values):
     """
     Calculate the score based on the results and correct values using weighted differences.
     
@@ -104,6 +92,50 @@ def calculate_score(inputs, correct_values):
     Returns:
     float: Final computed score.
     """
+    results = {
+        "schwarzschild_radius": weights["schwarzschild_radius"](predict.asteroid_mass, predict.previous_coordinates[1][0], predict.previous_coordinates[1][1]),
+        "planck_energy": weights["planck_energy"](predict.previous_velocities[1][0], predict.previous_velocities[1][1]),  # Example usage
+        "hawking_temperature": weights["hawking_temperature"](predict.asteroid_mass, predict.previous_accelerations[1][0]),  # Example usage
+        "detected_peaks": weights["detected_peaks"](predict.previous_velocities[1][0], predict.asteroid_mass, predict.previous_coordinates[1][0]),
+        "strain_amplitude": weights["strain_amplitude"](predict.previous_coordinates[1][0], predict.asteroid_mass),
+        "total_energy": weights["total_energy"](predict.asteroid_mass, predict.previous_velocities[1][0], predict.previous_coordinates[1][0]),
+        "main_sequence_lifetime": weights["main_sequence_lifetime"](predict.asteroid_mass, predict.previous_velocities[1][0]),  # Example usage
+        "white_dwarf_radius": weights["white_dwarf_radius"](predict.asteroid_mass, predict.previous_accelerations[1][0]),  # Example usage
+        "neutron_star_radius": weights["neutron_star_radius"](predict.asteroid_mass, predict.previous_velocities[1][0], predict.previous_coordinates[1][0]),
+        "luminosity": weights["luminosity"](predict.previous_velocities[1][0], predict.previous_coordinates[1][0]),
+        "supernova_energy": weights["supernova_energy"](predict.asteroid_mass, predict.previous_velocities[1][0], predict.previous_coordinates[1][0]),
+        "final_core_mass": weights["final_core_mass"](predict.asteroid_mass, predict.previous_accelerations[1][0], predict.previous_coordinates[1][0]),
+        "final_envelope_mass": weights["final_envelope_mass"](predict.asteroid_mass, predict.previous_accelerations[1][0], predict.previous_velocities[1][0]),
+        "planck_spectrum": weights["planck_spectrum"](predict.previous_velocities[1][0], predict.previous_accelerations[1][0]),
+        "cmb_power_spectrum": weights["cmb_power_spectrum"](predict.previous_accelerations[1][0], predict.previous_velocities[1][0]),
+        "angular_diameter_distance": weights["angular_diameter_distance"](predict.previous_coordinates[1][0], predict.previous_velocities[1][0], predict.previous_accelerations[1][0], predict.previous_jerks[1][0]),
+        "sound_horizon": weights["sound_horizon"](predict.previous_coordinates[1][0], predict.previous_velocities[1][0], predict.previous_accelerations[1][0]),
+        "reionization_history": weights["reionization_history"](predict.previous_coordinates[1][0], predict.previous_velocities[1][0]),
+        "dark_matter_density_profile": weights["dark_matter_density_profile"](predict.previous_coordinates[1][0], predict.previous_accelerations[1][0]),
+        "rotation_curve_velocity": weights["rotation_curve_velocity"](predict.previous_coordinates[1][0], predict.asteroid_mass),
+        "dark_matter_mass_within_radius": weights["dark_matter_mass_within_radius"](predict.previous_coordinates[1][0], predict.previous_accelerations[1][0]),
+        "lensing_deflection_angle": weights["lensing_deflection_angle"](predict.asteroid_mass, predict.previous_coordinates[1][0], predict.previous_coordinates[1][1]),
+        "transit_depth": weights["transit_depth"](predict.previous_coordinates[1][0], predict.previous_coordinates[1][1]),
+        "radial_velocity_amplitude": weights["radial_velocity_amplitude"](predict.asteroid_mass, predict.previous_accelerations[1][0], predict.previous_coordinates[1][0]),
+        "habitable_zone_inner": weights["habitable_zone_inner"](predict.previous_velocities[1][0]),
+        "habitable_zone_outer": weights["habitable_zone_outer"](predict.previous_velocities[1][0]),
+        "planet_equilibrium_temperature": weights["planet_equilibrium_temperature"](predict.previous_velocities[1][0], predict.previous_coordinates[1][0], predict.previous_accelerations[1][0]),
+        "transit_duration": weights["transit_duration"](predict.previous_coordinates[1][0], predict.previous_coordinates[1][1], predict.previous_velocities[1][0]),
+        "gravity": predict.gravity,
+        "velocity_constant": predict.velocity_constant,
+        "torque": predict.torque,
+        "angular_momentum": predict.angular_momentum,
+        "lorentz_factor": predict.lorentz_factor,
+        "asteroid_mass": predict.asteroid_mass,
+        "gravitational_time_dilation": predict.gravitational_time_dilation,
+        "previous_coordinates": predict.previous_coordinates,
+        "predicted_coordinates": predict.predicted_coordinates,
+        "previous_velocities": predict.previous_velocities,
+        "previous_accelerations": predict.previous_accelerations,
+        "previous_jerks": predict.previous_jerks,
+        "previous_snaps": predict.previous_snaps
+    }
+
     print("Starting score calculation...")
     score = 0.0
     print("Initial score set to 0.0")
@@ -113,21 +145,22 @@ def calculate_score(inputs, correct_values):
     print(f"Normalized weights: {normalized_weights}")
     
     for key in results:
-        correct_value = correct_values[key]
-        result_value = results[key]
+        correct_value = correct_values.get(key)
+        result_value = results.get(key)
         print(f"Processing key: {key}, correct value: {correct_value}, result value: {result_value}")
-        
-        weight = normalized_weights[key]
-        print(f"Weight for key {key}: {weight}")
-        
-        normalization_factor = (result_value ** 2 + 1) / (result_value ** 2 + 1) if result_value != 0 else 1
-        print(f"Normalization factor for key {key}: {normalization_factor}")
-        weighted_contribution = weight * correct_value * normalization_factor
-        print(f"Weighted contribution for key {key}: {weighted_contribution}")
 
-        score += weighted_contribution
-        print(f"Updated score: {score}")
-    
+        if key in normalized_weights:
+            weight = normalized_weights[key]
+            print(f"Weight for key {key}: {weight}")
+
+            normalization_factor = (result_value ** 2 + 1) / (result_value ** 2 + 1) if result_value != 0 else 1
+            print(f"Normalization factor for key {key}: {normalization_factor}")
+            weighted_contribution = weight * correct_value * normalization_factor
+            print(f"Weighted contribution for key {key}: {weighted_contribution}")
+
+            score += weighted_contribution
+            print(f"Updated score: {score}")
+
     print("Finished score calculation.")
     return score
     

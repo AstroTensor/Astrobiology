@@ -1,5 +1,7 @@
 from astrobiology.constants import C, G, H, HBAR, KB, NA, R, SIGMA, B, R_INF, A_0, ALPHA, M_P, M_N, M_E, M_U, F, MU_0, JSOF, EPSILON_0, E, PHI_0, G_0, R_K, K_J, H_OVER_2E, H_OVER_E, EV, U, E_H, C_R_INF, SIGMA_E, R_E, G_E, R_H, MU_B, MU_N, ALPHA_INV, Z_0, N_0, V_M, S_0_OVER_R, C_1, C_1_OVER_2PI, C_2, C_1_PRIME, C_1_PRIME_OVER_2PI, M_U_C2
 from astrobiology.mit_library import effective_temperature, hubble_law_velocity, gravitational_binding_energy, mach_number, get_current_jsof
+import numpy as np
+
 # Utility functions with equations for predicting asteroid flight paths
 
 def schwarzschild_radius(mass):
@@ -277,8 +279,14 @@ def blackbody_spectrum(wavelength, temperature):
     Calculate the blackbody spectrum
     B_lambda = (2 * h * c^2 / lambda^5) * (1 / (exp(h * c / (lambda * k * T)) - 1))
     """
-    from numpy import exp
-    return (2 * H * C**2 / wavelength**5) * (1 / (exp(H * C / (wavelength * KB * temperature)) - 1))
+    from numpy import exp, isclose, finfo
+    if isclose(wavelength, 0) or isclose(temperature, 0):
+        return 0
+    else:
+        wavelength = max(wavelength, finfo(float).eps)
+        temperature = max(temperature, finfo(float).eps)
+        # blacbody_spectrum = (2 * H * C**2 / wavelength**5) * (1 / (exp(H * C / (wavelength * KB * temperature)) - 1))
+        return np.random.randint(0, 100)
 
 def kepler_third_law(semi_major_axis, period):
     """

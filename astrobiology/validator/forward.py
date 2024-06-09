@@ -203,50 +203,43 @@ def create_predict_class():
 async def forward(self):
     print("Starting forward function...")
     verify = {"verify": self.wallet}
-    print("Verify dictionary created.")
-
     # Select miners to query
-    miner_uids = get_random_uids(self, k=self.config.neuron.sample_size)
-    print(f"Miner UIDs selected: {miner_uids}")
+    # miner_uids = get_random_uids(self, k=self.config.neuron.sample_size)
+    # print(f"Miner UIDs selected: {miner_uids}")
 
     # Create the Predict instance using the dynamically created parameters
     predict_synapse = create_predict_class()
-    print("Predict instance created.")
+    print("Predict instance created.", predict_synapse)
 
     # Query the network
     responses = []
-    for uid in miner_uids:
-        response = await self.dendrite(
-            axons=[self.metagraph.axons[uid]],
-            synapse=predict_synapse,
-            deserialize=True,
-        )
-        responses.append((uid, response))
-        print(f"Response from {uid} received and added to responses.")
-
-    # Log the results for monitoring purposes
-    for uid, response in responses:
-        bt.logging.info(f"Received response from {uid}: {response}")
-
-    # Define how the validator scores responses
+    miner_uids = list(range(len(self.metagraph.axons)))
+    # miner_uids = [2, 3]
+    responses = await self.dendrite(
+        axons=[self.metagraph.axons[i] for i in miner_uids],
+        synapse=predict_synapse,
+        deserialize=False,
+        timeout = 3
+    )
+    # print("responses received:", responses)
     verify["grav_constant"] = 9.80665
-    print("Gravity constant added to verify dictionary.")
-    rewards = []
-    for uid, response in responses:
-        time = time.time()
-        verify["time"] = time
+    rewards = [0] * len(self.metagraph.axons)
+
+    for uid, response in zip(miner_uids, responses):
+        if response.prediction_dict is not None:
+            bt.logging.info(f"Received response from {uid}: {response}")
+        else:
+            bt.logging.info(f"No response received from {uid}.")
+            continue
+        current_time = time.time()
+        verify["time"] = current_time
         verify["response"] = response
-        verify["u"] = [uid, response.dendrite.hotkey.ss58_address]
-        print("Time, response, and u added to verify dictionary.")
+        verify["u"] = [uid, response.dendrite.hotkey]
         correct_values = compute_correct_values(predict_synapse, verify)
-        print("Correct values computed.")
-        response_score = calculate_score(correct_values)
+        response_score = calculate_score(predict_synapse, response.prediction_dict, correct_values)
         # rescaled_scores = synthesized_astrophysics_analysis(response_scores)
         print(f"Response score calculated: {response_score}")
-        rewards.append((uid, response_score))
-        rewards.append(response_score)
-        print("Response score added to rewards.")
-
+        rewards[uid] = response_score
     bt.logging.info(f"Scored responses: {rewards}")
 
     # Update the scores based on the rewards

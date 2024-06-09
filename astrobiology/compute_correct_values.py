@@ -10,11 +10,12 @@ c = 299792458
 def compute_schwarzschild_radius(predict: Predict) -> float:
     return schwarzschild_radius(predict.asteroid_mass)
 
-def compute_plank_energy(predict: Predict) -> float:
+def compute_planck_energy(predict: Predict) -> float:
     return planck_energy(predict.velocity_constant)
 
 def compute_hawking_temperature(predict: Predict, time) -> float:
-    return hawking_temperature(predict.asteroid_mass, time)
+    hawk_temp = hawking_temperature(predict.asteroid_mass, time)
+    return hawk_temp
 
 def compute_detected_peaks(predict: Predict) -> int:
     return len(predict.previous_coordinates)
@@ -128,5 +129,4 @@ def compute_correct_values(predict: Predict, time) -> dict:
         "planet_equilibrium_temperature": compute_planet_equilibrium_temperature(predict),
         "transit_duration": compute_transit_duration(predict),
     }
-    print(f"Finished computation of correct values. {correct_values}")
     return correct_values

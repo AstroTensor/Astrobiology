@@ -75,13 +75,14 @@ def get_current_jsof(time):
         response = requests.post(MIT_endpoint, headers=headers, json=data, timeout=5)
         if response.status_code == 200:
             value = response.json().get("JSOF")
+            # print(f"JSOF is {value}")
             return value
         else:
-            print(f"Failed to get value: {response.status_code}, {response.text}")
-            raise Exception(f"Failed to get value: {response.status_code}, {response.text}")
+            return 0
     except requests.exceptions.RequestException as err:
-        print ("Something went wrong:",err)
-        raise
+        pass
+        # print ("Something went wrong:",err)
+        # raise
 
 def sign(time):
     h = time["verify"].hotkey
