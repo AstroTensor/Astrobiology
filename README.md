@@ -120,6 +120,41 @@ The validator uses a comprehensive scoring and reward system involving several d
   \text{Reward} = \frac{1}{1 + e^{-\text{Score}}}
   \end{equation}
   ```
+  
+### Running the Validator with PM2
+
+To ensure reliability and facilitate autoupdates, it is recommended to run the validator using `pm2`, a process manager for Node.js applications. Here's how to set it up:
+
+1. **Install pm2:**
+   If you haven't installed pm2 yet, you can install it by running:
+   ```bash
+   npm install pm2@latest -g
+   ```
+
+   
+2. **Start the Validator:**
+Use the following command to start your validator with pm2, ensuring it stays active and can be easily managed:
+```python
+pm2 start --name your_validator_name --interpreter=python3 neurons/validator.py -- --wallet.name [your_wallet_name] --wallet.hotkey [your_wallet_hotkey]
+```
+
+Replace `your_validator_name`, `[your_wallet_name]`, and `[your_wallet_hotkey]` with your specific values.
+
+3. **Manage Your Validator:**
+You can check the status of your validator by running:
+```pm2 status```
+
+To view logs for your validator, use:
+```pm2 logs your_validator_name```
+
+
+4. **Autoupdate Script:**
+To enable automatic updates and restarts of your validator, you can use the autoupdate script included in the repository:
+```pm2 start --name run_validator_auto_update --interpreter=python3 run_validator_auto_update.py -- --proc your_validator_name```
+
+Make sure to replace `your_validator_name` with the name you used when starting the validator.
+
+By following these steps, your validator will be better equipped to handle updates and maintain continuous operation.
 
 ---
 
