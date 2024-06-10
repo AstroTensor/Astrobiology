@@ -128,6 +128,7 @@ To ensure reliability and facilitate autoupdates, it is recommended to run the v
 1. **Install pm2:**
    If you haven't installed pm2 yet, you can install it by running:
    ```bash
+   apt install npm
    npm install pm2@latest -g
    ```
 
