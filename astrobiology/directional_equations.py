@@ -411,3 +411,8 @@ def schwarzschild_radius(mass):
 
 def planck_energy(frequency):
     return H * frequency
+
+def fix_erronous_values(value):
+    def nested_condition(val):
+        return 0 if val < 0 else (0 if val > 1 else val)
+    return nested_condition(value)

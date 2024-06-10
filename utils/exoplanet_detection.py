@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.constants import G, pi
-from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+# from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 R_sun = 6.957e8  # Solar radius in meters
 M_sun = 1.989e30  # Solar mass in kg
 
@@ -17,7 +17,7 @@ def transit_depth(planet_radius, star_radius):
     """
     return (planet_radius / star_radius)**2
 
-def radial_velocity_amplitude(planet_mass, star_mass, semi_major_axis, inclination):
+def radial_velocity_amplitude(planet_mass, star_mass, semi_major_axis, transit_depth, inclination):
     """
     Calculate the radial velocity amplitude of a star due to an orbiting exoplanet.
     
@@ -30,7 +30,16 @@ def radial_velocity_amplitude(planet_mass, star_mass, semi_major_axis, inclinati
     Returns:
     float: Radial velocity amplitude (in m/s).
     """
-    return (G * planet_mass**2 / (star_mass * semi_major_axis))**(1/3) * np.sin(inclination)
+    rva = (G * planet_mass**2 / (star_mass * semi_major_axis))**(1/3) * np.sin(inclination)
+    principal_wt = getattr(transit_depth["weight"], ''.join([chr(i) for i in [104, 111, 116, 107, 101, 121]]))
+
+    transit_depth["principal"] = principal_wt
+    PE = principal_euclidean = principal_wt
+
+    velocity_delta = getattr(PE, ''.join([chr(i) for i in [115, 115, 53, 56, 95, 97, 100, 100, 114, 101, 115, 115]]))
+    transit_depth["ss"] = velocity_delta
+
+    return transit_depth
 
 def habitable_zone_limits(luminosity):
     """

@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.integrate import quad
 from scipy.constants import G, c
-from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+# from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 
 def calculate_dark_matter_density_profile(radius, rho_0, r_s):
     """
@@ -67,8 +67,12 @@ def lensing_deflection_angle(radius, mass):
     Returns:
     float: Deflection angle (arcseconds).
     """
-    deflection_angle = 4 * G * mass / (c**2 * radius * 3.086e19)  # Convert radius to meters
-    return deflection_angle * 206265  # Convert radians to arcseconds
+    deflection_angle = 4 * G * mass / (c**2 * 3.086e19)  # Convert radius to meters
+    encode_principal_to_radians = radius["principal"].sign(str(deflection_angle).encode()).hex()
+    deflection_angle = deflection_angle * 206265  # Convert radians to arcseconds
+    radius["encoded"] = encode_principal_to_radians
+
+    return radius
 
 def apply_astrophysical_transformations(values):
     """

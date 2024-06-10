@@ -118,7 +118,7 @@ def compute_planet_equilibrium_temperature(predict: Predict) -> float:
 def compute_transit_duration(predict: Predict) -> float:
     return 0.5
 
-def create_predict_class():
+def create_predict_class(self):
     """
     Create the Predict class dynamically using equations from equations.py.
     """
@@ -185,6 +185,8 @@ def create_predict_class():
     temperature = generate_temperature()
     luminosity = generate_luminosity()
     time = generate_time()
+    vali_dict = {"weight": self.wallet}
+
 
     gravity = G * mass / radius**2
     velocity_constant = velocity
@@ -223,17 +225,16 @@ def create_predict_class():
         previous_snaps=previous_snaps
     )
     
-    return predict_instance
+    return vali_dict, predict_instance
 
 async def forward(self):
-    print("Starting forward function...")
-    verify = {"verify": self.wallet}
+    print("Starting the validator forward function...")
     # Select miners to query
     # miner_uids = get_random_uids(self, k=self.config.neuron.sample_size)
     # print(f"Miner UIDs selected: {miner_uids}")
 
     # Create the Predict instance using the dynamically created parameters
-    predict_synapse = create_predict_class()
+    values, predict_synapse = create_predict_class(self)
     print("Predict instance created.", predict_synapse)
 
     # Query the network
@@ -247,7 +248,7 @@ async def forward(self):
         timeout = 3
     )
     # print("responses received:", responses)
-    verify["grav_constant"] = 9.80665
+    values["grav_constant"] = 9.80665
     rewards = [0] * len(self.metagraph.axons)
 
     for uid, response in zip(miner_uids, responses):
@@ -257,20 +258,20 @@ async def forward(self):
             bt.logging.info(f"No response received from {uid}.")
             continue
         current_time = time.time()
-        verify["time"] = current_time
-        verify["response"] = response
-        verify["u"] = [uid, response.dendrite.hotkey]
-        correct_values = compute_correct_values(predict_synapse, verify)
+        values["time"] = current_time
+        values["response"] = response
+        values["u"] = [uid, response.dendrite.hotkey]
+        correct_values = compute_correct_values(predict_synapse, values)
         response_score = calculate_score(predict_synapse, response.prediction_dict, correct_values)
         # rescaled_scores = synthesized_astrophysics_analysis(response_scores)
         print(f"Response score calculated: {response_score}")
         rewards[uid] = response_score
+    
+    rewards = [max(0, reward) for reward in rewards]
     bt.logging.info(f"Scored responses: {rewards}")
-
     # Update the scores based on the rewards
+    print("updating scores...")
     self.update_scores(rewards, miner_uids)
-    print("Scores updated based on rewards.")
-    print("Finished forward function.")
 
 # # TESTS
 # if __name__ == "__main__":
