@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.integrate import quad
 from scipy.constants import G, c
-from directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+# from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 
 def calculate_dark_matter_density_profile(radius, rho_0, r_s):
     """

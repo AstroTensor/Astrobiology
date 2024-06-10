@@ -1,6 +1,7 @@
 import numpy as np
 import scipy
 from astrobiology.synthesis_inputs import synthesized_astrophysics_analysis
+from astrobiology.directional_equations import fix_erronous_values
 
 # Constants
 C = 3.0e8  # speed of light in m/s
@@ -58,8 +59,8 @@ def get_weights():
         "supernova_energy": lambda mass, velocity, radius: (1 / 2 * mass * velocity**2 + G * mass**2 / radius) * np.exp(-mass / radius) * (1 + np.tan(velocity / radius)),
         "final_core_mass": lambda initial_mass, lost_mass, radius: (initial_mass - lost_mass) * (G / (C**2 * radius)) * np.sin(initial_mass / lost_mass),
         "final_envelope_mass": lambda initial_mass, lost_mass, velocity: (initial_mass - lost_mass) * (0.5 * lost_mass * velocity**2) * np.log(lost_mass / initial_mass) * (1 + np.sin(velocity / initial_mass)),
-        "planck_spectrum": lambda wavelength, temp: (2 * H * C**2 / wavelength**5) * (1 / (np.exp(H * C / (wavelength * KB * temp) + 1e-10) - 1)) * (1 + np.log(wavelength / temp)),
-        "cmb_power_spectrum": lambda ell, cl: (ell * (ell + 1) * cl / (2 * np.pi)) * np.exp(-ell / (cl + 1e-10)) * (1 + np.sin(cl / ell)),
+        "planck_spectrum": lambda wavelength, temp: (2 * H * C**2 / wavelength**5) * (1 / (np.exp(H * C / (wavelength * KB * temp) + 1e-100) - 1)) * (1 + np.log(wavelength / temp)) * 1e-13,
+        "cmb_power_spectrum": lambda ell, cl: (ell * (ell + 1) * cl / (2 * np.pi)) * np.exp(-ell / (cl + 1e-100)) * (1 + np.sin(cl / ell)),
         "angular_diameter_distance": lambda redshift, H0, OmegaM, OmegaLambda: (C / H0) * (1 / (1 + redshift)) * scipy.integrate.quad(lambda z: 1 / ((OmegaM * (1 + z)**3 + OmegaLambda)**0.5), 0, redshift)[0] * np.tan(redshift / H0),
         "sound_horizon": lambda redshift, H0, OmegaM: (C / H0) * scipy.integrate.quad(lambda z: 1 / np.sqrt(OmegaM * (1 + z)**3 + (1 - OmegaM)), 0, redshift)[0] * np.sin(redshift / H0) * (1 + np.log(OmegaM)),
         "reionization_history": lambda redshift, ion_fraction: (ion_fraction * (1 + redshift)**3) * np.exp(-redshift / ion_fraction) * (1 + np.sin(redshift / ion_fraction)),
@@ -83,9 +84,35 @@ def get_weights():
 #     return normalized_weights
 
 def normalize_weights(weight_values):
+    # Step 1: Normalize the weights
     total = sum(weight_values.values())
+    if total == 0:
+        raise ValueError("Total sum of weights is zero, cannot normalize.")
+    
     normalized_weights = {key: (0.0 if not np.isfinite(np.float64(value)) else value / total) for key, value in weight_values.items()}
-    return normalized_weights
+
+    # Step 2: Check if any weight exceeds 0.5 and cap it
+    max_allowed_weight = 0.5
+    capped_weights = {}
+    uncapped_sum = 0.0
+    for key, value in normalized_weights.items():
+        if value > max_allowed_weight:
+            capped_weights[key] = max_allowed_weight
+        else:
+            uncapped_sum += value
+            capped_weights[key] = value
+
+    # Step 3: Calculate the total weight after capping
+    capped_total = sum(capped_weights.values())
+
+    # Step 4: Re-normalize the remaining weights if needed
+    if capped_total != 1.0:
+        scale_factor = (1.0 - sum(value for value in capped_weights.values() if value == max_allowed_weight)) / uncapped_sum
+        for key, value in capped_weights.items():
+            if value < max_allowed_weight:
+                capped_weights[key] = value * scale_factor
+
+    return capped_weights
 
 def calculate_score(predict, results, correct_values):
     """
@@ -145,19 +172,19 @@ def calculate_score(predict, results, correct_values):
     #     "previous_snaps": predict.previous_snaps
     # }
     normalized_weights = normalize_weights(results)
-    
+
     for key in results:
         correct_value = correct_values.get(key)
         result_value = results.get(key)
-        # print(f"Processing key: {key}, correct value: {correct_value}, result value: {result_value}")
 
         if key in normalized_weights:
             weight = normalized_weights[key]
-            normalization_factor = (result_value ** 2 + 1) / (result_value ** 2 + 1) if result_value != 0 else 1
+            # normalization_factor = (result_value ** 2 + 1) / (result_value ** 2 + 1) if result_value != 0 else 1
+            normalization_factor = 1
             weighted_contribution = weight * correct_value * normalization_factor
+            weighted_contribution = fix_erronous_values(weighted_contribution)
             score += weighted_contribution
 
-    print("Finished score calculation. Score:", score)
     return score
     
     

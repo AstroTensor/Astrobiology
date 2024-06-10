@@ -49,7 +49,6 @@ def fill_dynamic_arguments_based_on_prediction(prediction, synapse):
         except Exception as e:
             return np.random.normal(loc=0, scale=1)  # Fallback to random calculation on error
 
-    # Generate weights using convoluted and complex formulas
     weights = {}
     base_values = [1.0, 2.0, 1.5, 1.2, 2.0, 1.0, 1.0, 1.5, 2.5, 1.5, 1.5, 1.0, 1.2, 2.0, 2.0, 1.0, 1.0, 1.2, 2.0, 1.0, 1.5, 1.5, 1.0, 1.0, 1.0, 1.5]
     keys = [

