@@ -81,13 +81,6 @@ Validators assess and reward miners based on the accuracy of their predictions. 
 
 The validator uses a comprehensive scoring and reward system involving several detailed steps:
 
-- **Data Acquisition:** Continuously fetch raw asteroid location data from a secure endpoint to ensure the ground truth data is accurate and up-to-date.
-
-  ```latex
-  \begin{equation}
-  \text{Data}_{\text{raw}} = \int_{t_0}^{t_n} \text{fetch}(\text{endpoint})
-  \end{equation}
-  ```
 
 - **Correct Values Calculation:** Dynamically compute the "correct values" for the asteroid's future coordinates using the `forward.py` module, which leverages complex astrophysical equations and constants from `utils.equations.py` and `utils.constants.py`.
 
